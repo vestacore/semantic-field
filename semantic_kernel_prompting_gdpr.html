@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Semantic Kernel Prompting — Practical Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --dark: #1a1a2e;
+    --accent: #c8956c;
+    --accent-l: #e8c9a8;
+    --accent-d: #a07048;
+    --muted: #6b7280;
+    --lbg: #f8f6f3;
+    --vlbg: #faf9f7;
+    --soft: #d4c5b5;
+    --td: #2d2d3a;
+    --tb: #3d3d4a;
+    --tl: #7a7a8a;
+    --code-bg: #f0ece6;
+    --code-border: #d8d0c4;
+  }
+
+  body {
+    font-family: 'Poppins', sans-serif;
+    color: var(--tb);
+    background: #e8e4df;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    margin: 0 auto 10px;
+    padding: 22mm 26mm 24mm;
+    background: white;
+    position: relative;
+    overflow: hidden;
+    page-break-after: always;
+    box-shadow: 0 2px 20px rgba(0,0,0,.10);
+  }
+  @media print {
+    body { background: none; }
+    .page { box-shadow: none; margin: 0; }
+  }
+
+  /* ── header / footer ── */
+  .ph {
+    position: absolute; top: 17mm; left: 26mm; right: 26mm;
+    border-top: 1.5px solid var(--accent);
+    padding-top: 2.5mm;
+    font-size: 7pt; font-weight: 300; color: var(--muted);
+    letter-spacing: .04em;
+    display: flex; justify-content: space-between;
+  }
+  .pf {
+    position: absolute; bottom: 18mm; left: 26mm; right: 26mm;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .pf::before { content: ''; width: 14mm; border-top: .5px solid var(--accent); }
+  .pf .n { font-size: 8pt; font-weight: 300; color: var(--muted); }
+
+  /* ── typography ── */
+  .tag { font-size: 9pt; font-weight: 500; color: var(--accent-d); letter-spacing: .05em; margin-bottom: 2mm; }
+  h1 { font-weight: 700; color: var(--td); line-height: 1.18; }
+  h2 { font-weight: 700; color: var(--td); font-size: 13pt; margin-bottom: 3mm; }
+  h3 { font-weight: 500; color: var(--td); font-size: 11pt; margin-bottom: 2.5mm; }
+  p { font-weight: 300; font-size: 10pt; line-height: 1.62; margin-bottom: 2.5mm; }
+  .accent-note { font-weight: 500; font-style: italic; color: var(--accent-d); font-size: 9.5pt; }
+  .muted-note { font-weight: 300; font-style: italic; color: var(--tl); font-size: 9pt; }
+
+  .ar { width: 35mm; border: none; border-top: 2px solid var(--accent); margin: 4mm 0 8mm; }
+  .sr { width: 100%; border: none; border-top: .5px solid var(--soft); margin: 4mm 0; }
+
+  /* ── prompt / response blocks ── */
+  .prompt-block {
+    background: var(--code-bg);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 3mm 3mm 0;
+    padding: 4mm 5mm;
+    margin: 3mm 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8pt;
+    line-height: 1.7;
+    color: var(--td);
+    word-wrap: break-word;
+  }
+  .prompt-block .label {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 7pt;
+    color: var(--accent-d);
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    margin-bottom: 2mm;
+    display: block;
+  }
+  .prompt-block .dim { color: var(--tl); }
+  .prompt-block .hl { color: var(--accent-d); font-weight: 500; }
+
+  .response-block {
+    background: var(--vlbg);
+    border-left: 3px solid var(--soft);
+    border-radius: 0 3mm 3mm 0;
+    padding: 4mm 5mm;
+    margin: 3mm 0;
+    font-size: 8.5pt;
+    line-height: 1.65;
+    color: var(--tb);
+  }
+  .response-block .label {
+    font-weight: 600;
+    font-size: 7pt;
+    color: var(--muted);
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    margin-bottom: 2mm;
+    display: block;
+  }
+  .response-block .axis { font-weight: 600; color: var(--accent-d); }
+  .response-block .q { font-weight: 400; color: var(--td); }
+  .response-block .ref { font-weight: 300; color: var(--tl); font-size: 8pt; }
+
+  /* ── info box ── */
+  .info-box {
+    background: var(--lbg);
+    border-left: 2.5px solid var(--accent);
+    border-radius: 0 3mm 3mm 0;
+    padding: 4mm 5mm;
+    margin: 3mm 0;
+    font-size: 9.5pt; line-height: 1.6;
+  }
+  .info-box .ib-label {
+    font-weight: 500; font-style: italic;
+    color: var(--accent-d); font-size: 8.5pt;
+    margin-bottom: 1.5mm; display: block;
+  }
+
+  /* ── bullet ── */
+  ul.bl { list-style: none; padding: 0; margin: 2mm 0 3mm; }
+  ul.bl li {
+    position: relative; padding-left: 7mm;
+    font-weight: 300; font-size: 9.5pt; line-height: 1.6; margin-bottom: 1.8mm;
+  }
+  ul.bl li::before {
+    content: '\2022'; position: absolute; left: 1mm;
+    color: var(--accent); font-weight: 700; font-size: 10pt;
+  }
+
+  /* ── result fragment ── */
+  .fragment {
+    background: white;
+    border: 1px solid var(--code-border);
+    border-radius: 3mm;
+    padding: 4mm 5mm;
+    margin: 3mm 0;
+    font-size: 8.5pt; line-height: 1.6;
+  }
+  .fragment .f-id { font-family: 'JetBrains Mono', monospace; font-weight: 500; color: var(--accent); font-size: 8pt; }
+  .fragment .f-name { font-weight: 600; color: var(--td); font-size: 9pt; }
+  .fragment .f-q { font-weight: 400; font-style: italic; color: var(--accent-d); font-size: 8.5pt; margin: 1.5mm 0; display: block; }
+  .fragment .f-text { font-weight: 300; color: var(--tb); }
+  .fragment .f-deps { font-weight: 300; color: var(--tl); font-size: 7.5pt; margin-top: 1.5mm; }
+
+  /* ── step indicator ── */
+  .step-pill {
+    display: inline-block;
+    background: var(--accent);
+    color: white;
+    font-weight: 700; font-size: 8pt;
+    padding: 1.2mm 4mm;
+    border-radius: 2mm;
+    letter-spacing: .03em;
+    margin-right: 3mm;
+    vertical-align: middle;
+  }
+  .step-title-inline {
+    font-weight: 700; font-size: 13pt; color: var(--td);
+    vertical-align: middle;
+  }
+
+  /* ── cover specific ── */
+  .page.cover {
+    background: var(--dark); color: white;
+    display: flex; flex-direction: column; justify-content: center;
+  }
+  .cover .top-bar { position: absolute; top: 0; left: 0; right: 0; height: 7mm; background: var(--accent); }
+  .cover .tag { color: var(--accent-l); font-weight: 300; font-size: 9pt; letter-spacing: .08em; }
+  .cover h1 { color: white; font-size: 32pt; margin: 6mm 0; }
+  .cover .sub { font-weight: 300; font-size: 13pt; color: var(--accent-l); }
+  .cover .sub-i { font-weight: 300; font-style: italic; font-size: 11pt; color: var(--accent-l); margin-top: 1mm; }
+  .cover .desc { font-weight: 400; font-size: 10pt; color: #b0b0c0; line-height: 1.65; margin-top: 10mm; }
+  .cover .bottom { position: absolute; bottom: 25mm; left: 26mm; }
+  .cover .bottom .fw { font-weight: 500; font-size: 9pt; color: var(--accent); }
+  .cover .bottom .dt { font-weight: 300; font-size: 8pt; color: #707080; margin-top: 1.5mm; }
+
+  /* ── closing ── */
+  .page.closing {
+    background: var(--dark); color: white;
+    display: flex; flex-direction: column; justify-content: center;
+  }
+  .closing .top-bar { position: absolute; top: 0; left: 0; right: 0; height: 4mm; background: var(--accent); }
+  .closing .quote { font-weight: 300; font-style: italic; font-size: 14pt; color: var(--accent-l); line-height: 1.65; }
+  .closing h1 { color: white; font-size: 19pt; margin-top: 14mm; }
+  .closing .sub { font-weight: 300; font-size: 10pt; color: #808090; margin-top: 3mm; }
+  .closing .note { font-weight: 400; font-size: 9.5pt; color: var(--accent-l); margin-top: 16mm; line-height: 1.6; }
+  .closing .dt { font-weight: 300; font-size: 9pt; color: #606070; margin-top: 12mm; }
+
+  /* helpers */
+  .mt2 { margin-top: 2mm; }
+  .mt4 { margin-top: 4mm; }
+  .mt6 { margin-top: 6mm; }
+  .mt8 { margin-top: 8mm; }
+  .mb2 { margin-bottom: 2mm; }
+  .small { font-size: 9pt; }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- COVER                                          -->
+<!-- ══════════════════════════════════════════════ -->
+<div class="page cover">
+  <div class="top-bar"></div>
+  <p class="tag">PROMPTING TECHNIQUE GUIDE</p>
+  <h1>Semantic Kernel<br>Prompting</h1>
+  <p class="sub">Read complex texts with LLMs — not once, but in layers.</p>
+  <p class="sub-i">A step-by-step practical guide with GDPR examples.</p>
+  <hr class="ar" style="border-color: var(--accent-l);">
+  <p class="desc">
+    A common way to approach this is to ask an LLM to 'summarize this regulation' or 'describe/explain this'. It looks complete. But something is missing.<br>
+    <br>
+    This guide shows a different approach:<br>
+    build a field of questions first, then read through it.
+  </p>
+  <div class="bottom">
+    <div class="fw">CoAgnes Framework</div>
+    <div class="dt">March 2026</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- PAGE 2: THE PROBLEM                            -->
+<!-- ══════════════════════════════════════════════ -->
+<div class="page">
+  <div class="ph"><span>SEMANTIC KERNEL PROMPTING</span><span>THE PROBLEM</span></div>
+
+  <h1 style="font-size:18pt; margin-top:10mm;">What happens when you ask<br>"Summarize GDPR Recital 29"?</h1>
+
+  <div class="prompt-block mt6">
+    <span class="label">A typical prompt</span>Explain GDPR Recital 29.</div>
+
+  <div class="response-block mt2">
+    <span class="label">Model Response (typical)</span>
+    Recital 29 of the General Data Protection Regulation (GDPR) focuses on the concept of pseudonymization as a key strategy for enhancing privacy and security. It encourages data controllers to process personal data in a way that the data can no longer be attributed ...
+  </div>
+
+  <p class="mt6">This looks fine. But it leaves important structure <strong>implicit</strong>:</p>
+
+  <ul class="bl mt2">
+    <li>Is pseudonymisation mandatory or merely encouraged?</li>
+    <li>Does "kept separately" mean logically, physically, or cryptographically?</li>
+    <li>Do pseudonymised data remain personal data?</li>
+    <li>Who exactly are "authorised persons" and under what constraints?</li>
+    <li>Where does this recital end and other provisions begin?</li>
+  </ul>
+
+  <p class="mt4">
+    A flat summary collapses the fragment into a single surface. The structure underneath — definitions, boundaries, connections, open zones — disappears.
+  </p>
+
+  <div class="info-box mt4">
+    <span class="ib-label">What if instead…</span>
+    You could build a field of questions <em>before</em> reading, then pass the text through that field — producing not a summary but a <strong>semantic map</strong> showing what the fragment asserts, where it ends, what it connects to, and what it genuinely leaves open?
+  </div>
+
+  <p class="accent-note mt4">That's what this protocol does. Let’s examine this step by step.</p>
+
+  <div class="pf"><span></span><span class="n">2</span></div>
+</div>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- PAGE 3: STEP 1 — GENERATE QUESTIONS             -->
+<!-- ══════════════════════════════════════════════ -->
+<div class="page">
+  <div class="ph"><span>SEMANTIC KERNEL PROMPTING</span><span>STEP 1 — GENERATE QUESTIONS</span></div>
+
+  <div class="mt8">
+    <span class="step-pill">STEP 1</span>
+    <span class="step-title-inline">Generate Questions — Not Answers</span>
+  </div>
+
+  <p class="mt6 small">Send the fragment with an instruction to produce <strong>questions</strong> along three axes. Not answers — questions.</p>
+
+  <div class="prompt-block mt4">
+    <span class="label">A typical prompt</span>Looking from inside the semantic space of this fragment,
+identify question vectors directed toward other parts,
+definitions, or provisions of the document. <br/>
+<br/>
+<span class="hl">## Truth</span><br/> — Questions pointing toward definitions <br/>
+<span class="hl">## Deep</span><br/> — Questions pointing toward boundaries <br/>
+<span class="hl">## Connect</span><br/> — Questions pointing toward the fragment's
+          place in the overall field <br/>
+
+<br/>
+GDPR Recital 29:
+In order to create incentives to apply pseudonymisation
+when processing personal data, measures of pseudonymisation
+should, whilst allowing general analysis, be possible
+within the same controller...</div>
+
+  <div class="response-block mt2">
+    <span class="label">Model Output (excerpt)</span>
+    <span class="axis">Truth</span><br/>
+    <span class="q">What does GDPR mean by "pseudonymisation"?</span> <span class="ref">→ Art. 4(5)</span><br/>
+    <span class="q">Who is a "controller" in this context?</span> <span class="ref">→ Art. 4(7)</span><br/>
+    <span class="q">What counts as "additional information"?</span> <span class="ref">→ Art. 4(5) + Recital 26</span><br/>
+    ...<br/>
+    <br/>
+    <span class="axis" style="margin-top:2mm;">Deep</span><br/>
+    <span class="q">Is this an obligation or merely an incentive?</span><br/>
+    <span class="q">Does "kept separately" mean logical, physical, or cryptographic separation?</span><br/>
+    <span class="q">Is pseudonymisation alone sufficient for GDPR compliance?</span><br/>
+    ...<br/>
+    <br/>
+    <span class="axis" style="margin-top:2mm;">Connect</span><br/>
+    <span class="q">How does this relate to privacy by design (Art. 25)?</span><br/>
+    <span class="q">How does it connect to security of processing (Art. 32)?</span><br/>
+    <span class="q">Where is the boundary with anonymisation (Recital 26)?</span>
+    ...<br/>
+  </div>
+
+  <p class="mt4"><strong>Why questions first?</strong> They form the <em>field of attention</em> for everything that follows. Truth questions will load context. Deep questions will guide analysis. Connect questions will organize the output.</p>
+
+  <p class="muted-note mt2">Review the questions. Add missing ones. Remove noise. This is your moment to shape the reading.</p>
+
+  <div class="pf"><span></span><span class="n">3</span></div>
+</div>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- PAGE 4: STEP 2 — BUILD CONTEXT                  -->
+<!-- ══════════════════════════════════════════════ -->
+<div class="page">
+  <div class="ph"><span>SEMANTIC KERNEL PROMPTING</span><span>STEP 2 — BUILD CONTEXT</span></div>
+
+  <div class="mt8">
+    <span class="step-pill">STEP 2</span>
+    <span class="step-title-inline">Build Context Through Questions</span>
+  </div>
+
+  <p class="mt6 small">Now use the <strong>Truth questions</strong> as vectors to project a structured context — before any analysis.</p>
+
+  <div class="prompt-block mt4">
+    <span class="label">A typical prompt</span>Looking from inside the semantic space of the fragment,
+project the critically necessary components for full
+semantic understanding, using these questions as
+anchoring vectors. <br/>
+<br/>
+<span class="hl">## Structure</span><br/>
+- Truth: critical definitions<br/>
+- Deep: applicability questions<br/>
+- Connect: structural relationships<br/>
+- Service: concrete semantic forms<br/>
+- Knowledge: related fragments<br/>
+- Evolution: temporal relationships<br/>
+- Responsibility: points of incompleteness<br/>
+<br/>
+<span class="dim">--- Questions from Step 1 (Truth section) ---</span><br/>
+<span class="dim">What does GDPR mean by "pseudonymisation"? </span><br/>
+<span class="dim">Who is a "controller" in this context? </span><br/>
+<span class="dim">... </span>
+</div>
+
+  <div class="response-block mt2">
+    <span class="label">Model Output (condensed excerpt)</span>
+    <span class="axis">Truth: definitions</span><br/>
+    <strong>Pseudonymisation</strong> (Art. 4(5)) — processing so data cannot be
+    attributed to a subject without separate additional information.
+    Key: pseudonymised data remain personal data.<br/>
+
+    <strong>Controller</strong> (Art. 4(7)) — entity determining purposes and means.
+    "Within the same controller" = re-identification key may stay internal.<br/>
+    ... <br/>
+    <span class="axis" style="margin-top:2mm;">Responsibility: (incompleteness)</span><br/>
+    What counts as sufficient "separately" is not specified.<br/>
+    Who qualifies as "authorised persons" has no exhaustive criteria.<br/>
+    The boundary between pseudonymisation and weak masking is undefined.<br/>
+  </div>
+
+  <p class="mt4"><strong>Why before analysis?</strong> This is like reading definitions and cross-references before interpreting a clause. You load the model's working memory with oriented context — not generic knowledge, but knowledge shaped by your questions.</p>
+
+  <p class="muted-note mt2">The model now "sees" the fragment through a prepared lens. Next step: look through it.</p>
+
+  <div class="pf"><span></span><span class="n">4</span></div>
+</div>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- PAGE 5: STEP 3 — EXECUTE DISCLOSURE             -->
+<!-- ══════════════════════════════════════════════ -->
+<div class="page">
+  <div class="ph"><span>SEMANTIC KERNEL PROMPTING</span><span>STEP 3 — DISCLOSURE</span></div>
+
+  <div class="mt8">
+    <span class="step-pill">STEP 3</span>
+    <span class="step-title-inline">Read Through the Question Field</span>
+  </div>
+
+  <p class="mt6 small">Combine context (Step 2) with <strong>Deep questions</strong> as attention geometry and <strong>Connect questions</strong> as output structure.</p>
+
+  <div class="prompt-block mt4" style="font-size:7.5pt;">
+    <span class="label">Prompt Structure</span>
+    <span class="hl">System message:</span> <br/>
+    Attention geometry: <br/>
+    <span class="dim">[Deep questions from Step 1]</span><br/>
+    Projection structure: <br/>
+    <span class="dim">[Connect questions from Step 1]</span><br/>
+    Output format: Truth .. / Deep .. / Connect .. / Service .. / Knowledge .. / Evolution .. / Responsibility ..<br/>
+    <br/>
+    <span class="hl">User message:</span><br/>
+    Context: <br/>
+    <span class="dim">[Full output from Step 2]</span><br/>
+    Fragment: <br/>
+    <span class="dim">[Original text of Recital 29]</span>
+  </div>
+
+  <div class="response-block mt2" style="font-size: 8pt;">
+    <span class="label">Model Output (example)</span>
+    <span class="axis">Truth</span><br/> 
+    — Recital 29 describes a regime of <em>managed reversibility</em>, not permanent identity destruction. It encourages, not mandates.<br/>
+    ...<br/>
+    <span class="axis">Deep</span><br/> 
+    — Pseudonymisation alone is insufficient for compliance.
+    The boundary of "kept separately" is left to risk-based assessment.
+    Re-identification must remain exceptional, not routine.<br/>
+    ...<br/>
+    <span class="axis">Connect</span><br/> 
+    — Bridges Art. 24 (controller responsibility), Art. 25
+    (privacy by design), Art. 32 (security). Simultaneously a security measure,
+    a minimisation measure, and a design-level architectural choice.<br/>
+    ... <br/>
+    <span class="axis">Responsibility</span><br/> 
+    — Open: exact separation standard, authorised person criteria, boundary with anonymisation, practical audit requirements.<br/>
+    ... 
+  </div>
+
+  <p class="mt4"><strong>What happened?</strong> Deep questions told the model <em>what to look for</em> (boundaries, sufficiency, scope). Connect questions told it <em>how to organize</em> (relationships, axes of compliance). The result is structured analysis, not flat summary.</p>
+
+  <p class="accent-note mt2">This single step already goes far beyond "summarize." But we're not done.</p>
+
+  <div class="pf"><span></span><span class="n">5</span></div>
+</div>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- PAGE 6: STEP 4 — EXTRACT FRAGMENTS              -->
+<!-- ══════════════════════════════════════════════ -->
+<div class="page">
+  <div class="ph"><span>SEMANTIC KERNEL PROMPTING</span><span>STEP 4 — EXTRACT</span></div>
+
+  <div class="mt8">
+    <span class="step-pill">STEP 4</span>
+    <span class="step-title-inline">Crystallize Into Named Fragments</span>
+  </div>
+
+  <p class="mt6 small">Extract discrete semantic units from the disclosure. Each fragment carries its own question, forces, and connections.</p>
+
+  <div class="prompt-block mt4" style="font-size: 7.5pt;">
+    <span class="label">A typical prompt</span>Extract assertions from the analysis as structured fragments.
+For each: name, core question, sustaining forces,
+connections, dependencies, and full text.</div>
+
+  <div class="fragment mt4">
+    <span class="f-id">A1</span> &nbsp; <span class="f-name">Not an obligation, but a strong normative incentive</span>
+    <span class="f-q">"What normative force does Recital 29 apply to pseudonymisation given its incentive-based wording?"</span>
+    <span class="f-text">Recital 29 expresses regulatory encouragement in favor of pseudonymisation but does not introduce a universal unconditional obligation to always apply it.</span>
+    <span class="f-deps">Depends on: Semantic Center · Connects to: A7, A12</span>
+  </div>
+
+  <div class="fragment mt2">
+    <span class="f-id">A6</span> &nbsp; <span class="f-name">"Kept separately" means real separation, not nominal</span>
+    <span class="f-q">"What degree of separation does additional information require given risk and operational accessibility?"</span>
+    <span class="f-text">If the same people in the same workflow can easily link code to identity, the "kept separately" requirement is not substantively met.</span>
+    <span class="f-deps">Depends on: A5 · Connects to: A4, A11, A15</span>
+  </div>
+
+  <div class="fragment mt2">
+    <span class="f-id">A8</span> &nbsp; <span class="f-name">Controlled reversibility preserves personal data status</span>
+    <span class="f-q">"What legal status does reversibly pseudonymised data produce given additional information can restore identity?"</span>
+    <span class="f-text">If re-attribution remains possible via separately stored additional information, data typically remain personal data in pseudonymised form — not anonymous data.</span>
+    <span class="f-deps">Depends on: A5, A6 · Connects to: A12</span>
+  </div>
+
+  <p class="mt4"><strong>Why this matters:</strong> You now have <em>named, addressable, connected</em> semantic units — not a wall of text. Each fragment can be versioned, challenged, reused, or traced back to the questions that produced it.</p>
+
+  <div class="pf"><span></span><span class="n">6</span></div>
+</div>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- PAGE 7: WHAT YOU GET                            -->
+<!-- ══════════════════════════════════════════════ -->
+<div class="page">
+  <div class="ph"><span>SEMANTIC KERNEL PROMPTING</span><span>THE RESULT</span></div>
+
+  <h1 style="font-size:18pt; margin-top:10mm;">Summary vs. Semantic Map</h1>
+
+  <div style="display:flex; gap:4mm; margin-top:6mm;">
+    <div style="flex:1; background:var(--vlbg); border-radius:3mm; padding:4mm 5mm;">
+      <p style="font-weight:600; color:var(--muted); font-size:8pt; letter-spacing:.05em; margin-bottom:3mm;">SINGLE-PASS SUMMARY</p>
+      <p style="font-size:9pt; color:var(--tl);">
+        Recital 29 encourages pseudonymisation. Controllers should keep re-identification keys separate and designate authorised persons.
+      </p>
+      <p style="font-size:8pt; color:var(--tl); margin-top:3mm; font-style:italic;">
+        ✗ No definitions anchored<br>
+        ✗ No boundaries identified<br>
+        ✗ No connections mapped<br>
+        ✗ No open questions surfaced<br>
+        ✗ Looks complete — isn't
+      </p>
+    </div>
+    <div style="flex:1; background:var(--lbg); border-left:2.5px solid var(--accent); border-radius:0 3mm 3mm 0; padding:4mm 5mm;">
+      <p style="font-weight:600; color:var(--accent-d); font-size:8pt; letter-spacing:.05em; margin-bottom:3mm;">SEMANTIC KERNEL OUTPUT</p>
+      <p style="font-size:9pt; color:var(--td);">
+        - named assertions with dependency graph.<br>
+        - definitions anchored to source articles.<br>
+        - boundary questions with explicit scope.<br>
+        - connection vectors to surrounding provisions.<br>
+        - open zones explicitly marked as unresolved.
+      </p>
+      <p style="font-size:8pt; color:var(--accent-d); margin-top:3mm; font-style:italic;">
+        ✓ Navigable structure<br>
+        ✓ Traceable to questions<br>
+        ✓ Honest about incompleteness<br>
+        ✓ Reusable across analyses
+      </p>
+    </div>
+  </div>
+
+  <hr class="sr" style="margin-top:6mm;">
+
+  <h2 class="mt4">The Protocol at a Glance</h2>
+
+  <div style="display:flex; gap:2mm; margin-top:3mm; font-size:8pt; text-align:center;">
+    <div style="flex:1; background:var(--accent); color:white; border-radius:2mm; padding:3mm 2mm;">
+      <strong style="font-size:9pt;">1</strong><br>Generate<br>Questions
+    </div>
+    <div style="flex:0 0 4mm; display:flex; align-items:center; color:var(--accent); font-size:12pt;">→</div>
+    <div style="flex:1; background:var(--accent); color:white; border-radius:2mm; padding:3mm 2mm;">
+      <strong style="font-size:9pt;">2</strong><br>Build<br>Context
+    </div>
+    <div style="flex:0 0 4mm; display:flex; align-items:center; color:var(--accent); font-size:12pt;">→</div>
+    <div style="flex:1; background:var(--accent); color:white; border-radius:2mm; padding:3mm 2mm;">
+      <strong style="font-size:9pt;">3</strong><br>Disclose Through<br>Question Field
+    </div>
+    <div style="flex:0 0 4mm; display:flex; align-items:center; color:var(--accent); font-size:12pt;">→</div>
+    <div style="flex:1; background:var(--accent); color:white; border-radius:2mm; padding:3mm 2mm;">
+      <strong style="font-size:9pt;">4</strong><br>Extract<br>Fragments
+    </div>
+  </div>
+
+  <p class="mt6 small">Each step uses a different part of the question spectrum. Truth questions load context. Deep questions shape attention. Connect questions organize output. The result is a multi-layered semantic map, not a flat response.</p>
+
+  <div class="info-box mt4">
+    <span class="ib-label">Why questions?</span>
+    Questions are structurally more stable than answers. A question oriented toward boundaries <em>returns boundary information</em>, not arbitrary content. Questions act not only as queries, but as stable semantic anchors — pointers that define regions of meaning even before specific answers are formed.
+  </div>
+
+  <div class="pf"><span></span><span class="n">7</span></div>
+</div>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- PAGE 8: WORKING WITH FRAGMENTS                  -->
+<!-- ══════════════════════════════════════════════ -->
+<div class="page">
+  <div class="ph"><span>SEMANTIC KERNEL PROMPTING</span><span>WORKING WITH OUTPUTS</span></div>
+
+  <h1 style="font-size:18pt; margin-top:10mm;">What to Do with the Fragments</h1>
+
+  <h3 class="mt6">Branch inside your chat</h3>
+  <p class="small">Both ChatGPT and Claude let you branch conversations. Use this to create parallel analysis tracks:</p>
+
+  <div class="prompt-block mt2" style="font-size:7.5pt;">
+    <span class="label">Workflow Example</span><span class="hl">Main thread:</span> Run the protocol on Recital 29<br/>
+  ↳ <span class="hl">Branch A:</span> <br/>Deep-dive on assertion A6
+                 ("kept separately" — what does it mean in practice?)<br/>
+  ↳ <span class="hl">Branch B:</span> <br/>Run the protocol on Recital 26<br/>
+                 (anonymisation boundary — feeds back into A8)
+  ↳ <span class="hl">Branch C:</span><br/> Cross-reference A1 with Article 25
+                 (is the "incentive" reading defensible?)
+  </div>
+
+  <h3 class="mt6">Build cumulative context</h3>
+  <p class="small">When analyzing multiple fragments, copy key outputs into the next analysis as pre-loaded context:</p>
+
+  <div class="prompt-block mt2" style="font-size:7.5pt;">
+    <span class="label">Next Analysis — Pre-loaded Context</span>
+    <span class="dim">## Previously established from Recital 29:</span><br/>
+- Pseudonymised data remain personal data (A8)
+- "Kept separately" requires real, not nominal separation (A6)
+- Pseudonymisation is simultaneously security,
+  minimisation, and privacy-by-design measure (A12)<br/>
+<br/>
+<span class="dim">## New fragment:</span><br/>
+GDPR Article 25 — Data protection by design and by default<br/>
+...</div>
+
+  <p class="mt4 small">Each analysis enriches the field for the next. Fragments accumulate into a <strong>portable semantic toolkit</strong> for your domain.</p>
+
+  <hr class="sr">
+
+  <h3 class="mt4">Fragment types you'll produce</h3>
+  <ul class="bl">
+    <li><strong>Assertions</strong> — what the text claims (with traceable foundations)</li>
+    <li><strong>Definitions</strong> — what terms mean <em>in this specific context</em></li>
+    <li><strong>Boundaries</strong> — where the fragment's applicability starts and stops</li>
+    <li><strong>Connections</strong> — how it links to surrounding provisions</li>
+    <li><strong>Open questions</strong> — what it genuinely leaves unresolved</li>
+  </ul>
+
+  <div class="pf"><span></span><span class="n">8</span></div>
+</div>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- PAGE 9: BEYOND CHAT                             -->
+<!-- ══════════════════════════════════════════════ -->
+<div class="page">
+  <div class="ph"><span>SEMANTIC KERNEL PROMPTING</span><span>SCALING UP</span></div>
+
+  <h1 style="font-size:18pt; margin-top:10mm;">Beyond Chat: What Changes<br>with Automation</h1>
+
+  <h3 class="mt6">What works well in chat mode</h3>
+  <ul class="bl">
+    <li>No infrastructure needed — start immediately in any LLM interface</li>
+    <li>Teaches the <em>feel</em> of question-driven reading through practice</li>
+    <li>Produces useful artifacts for individual regulatory analysis</li>
+  </ul>
+
+  <h3 class="mt4">What chat mode can't do</h3>
+  <ul class="bl">
+    <li><strong>No persistent state</strong> — fragments don't survive between sessions</li>
+    <li><strong>No real retrieval</strong> — context relies on model knowledge, not actual documents</li>
+    <li><strong>No automated tracing</strong> — verification requires manual effort</li>
+    <li><strong>No cross-fragment coherence</strong> — context windows limit accumulation</li>
+  </ul>
+
+  <hr class="sr">
+  <h3 class="mt4">Automation</h3>
+  <p class="mt4 small">
+The protocol you've just walked through has a property that matters: every step has a defined input and a defined output. Questions go in, structured context comes out. Context goes in, disclosed fragments come out. This means the protocol doesn't just work in chat — it is already shaped for automation.<br/>
+</p>
+
+
+  <div class="prompt-block mt2" style="font-size:7.5pt; font-family: 'Poppins', sans-serif;">
+    <span class="label">Pipeline</span>
+    <strong>Input Parser</strong> <span class="dim">(fragment metadata)</span><br/>
+     → <strong>Question Generator</strong> <span class="dim">(orientation prompt + LLM call)</span><br/>
+     → <strong>Context Builder</strong> <span class="dim">(Truth Qs + retrieval from Qdrant / doc store)</span><br/>
+     → <strong>Disclosure Engine</strong> <span class="dim">(Deep + Connect Qs + assembled context → LLM)</span><br/>
+     → <strong>Fragment Extractor</strong> <span class="dim">(structured parser → JSON/YAML)</span><br/>
+     → <strong>Knowledge Store</strong> <span class="dim">(persistent graph + vector index)</span>
+  </div>
+
+  <p class="mt4 small">Automation adds what chat cannot: <strong>persistent fragments</strong> across sessions, <strong>real retrieval</strong> from document stores, <strong>automated completeness checking</strong>, and the ability to run the protocol across an entire regulation systematically.</p>
+
+  <p class="mt4 small">Upcoming publications will show the protocol running as an automated pipeline — with real retrieval, real fragment accumulation, and real cross-document coherence. </p>
+
+  <p class="accent-note mt4">The chat protocol is not a degraded version. It's the seed — prove the structure works at the scale of one person and one fragment, then scale.</p>
+
+  <div class="pf"><span></span><span class="n">9</span></div>
+</div>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- CLOSING                                         -->
+<!-- ══════════════════════════════════════════════ -->
+<div class="page closing">
+  <div class="top-bar"></div>
+  <p class="quote">
+    The most valuable thing you can give<br>
+    someone is not an answer.<br><br>
+    It is a better way of asking.
+  </p>
+  <hr class="ar" style="border-color: var(--accent-l); margin: 14mm 0;">
+  <h1>Semantic Kernel Prompting</h1>
+  <p class="sub">A practitioner's guide from the CoAgnes Framework</p>
+  <p class="note">
+    Full worked example with complete prompts,<br>
+    step formalization table, and GDPR Recital 29<br>
+    protocol trace available separately.
+  </p>
+  <p class="dt">CoAgnes Framework · March 2026</p>
+</div>
+
+</body>
+</html>
