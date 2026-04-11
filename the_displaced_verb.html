@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Displaced Verb</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap');
+
+  :root {
+    --bg: #FAFAF7;
+    --text: #2C2C2C;
+    --text-light: #6B6B6B;
+    --text-faint: #A0A0A0;
+    --accent: #1A3A5C;
+    --accent-light: #3A6A9C;
+    --warm: #8B6914;
+    --rule: #D4D0C8;
+    --rule-light: #E8E4DC;
+    --card: #F0EDE6;
+    --risk-high: #C44B3F;
+    --risk-med: #D4943A;
+    --risk-low: #5A8A5E;
+    --white: #FFFFFF;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'EB Garamond', Georgia, serif;
+    font-size: 17px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .container {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 0 5px;
+  }
+
+  /* ── COVER ── */
+  .cover {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 60px 24px;
+  }
+
+  .cover-brand {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    letter-spacing: 6px;
+    color: var(--text-faint);
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+
+  .cover-sub-brand {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--text-faint);
+    margin-bottom: 40px;
+  }
+
+  .cover-specimen {
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    letter-spacing: 5px;
+    color: var(--warm);
+    margin-bottom: 30px;
+  }
+
+  .cover h1 {
+    font-family: 'EB Garamond', serif;
+    font-size: clamp(36px, 6vw, 52px);
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1.15;
+    margin-bottom: 16px;
+  }
+
+  .cover-subtitle {
+    font-style: italic;
+    font-size: clamp(18px, 3vw, 22px);
+    color: var(--text-light);
+    margin-bottom: 50px;
+  }
+
+  .cover-epigraph {
+    font-style: italic;
+    font-size: 17px;
+    color: var(--text-light);
+    line-height: 1.7;
+    max-width: 480px;
+    margin-bottom: 60px;
+  }
+
+  .cover-method {
+    font-style: italic;
+    font-size: 13px;
+    color: var(--text-faint);
+    line-height: 1.8;
+    max-width: 520px;
+    border-top: 1px solid var(--rule-light);
+    padding-top: 24px;
+  }
+
+  .divider {
+    width: 80px;
+    height: 1px;
+    background: var(--rule);
+    margin: 30px auto;
+  }
+
+  /* ── SECTIONS ── */
+  section {
+    padding: 10px 0 10px;
+    border-top: 1px solid var(--rule-light);
+  }
+
+  .section-num {
+    font-family: 'EB Garamond', serif;
+    font-size: 42px;
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1;
+  }
+
+  .section-title {
+    font-family: 'EB Garamond', serif;
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+
+  .section-rule {
+    width: 100%;
+    height: 1px;
+    background: var(--rule);
+    margin: 10px 0 10px;
+  }
+
+  p { margin-bottom: 18px; }
+
+  .lead {
+    font-size: 18px;
+    color: var(--text);
+  }
+
+  .label {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    color: var(--warm);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+
+  /* ── GRAMMATICAL OPERATIONS ── */
+  .operation {
+    margin-bottom: 28px;
+  }
+
+  .operation h4 {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--accent);
+    margin-bottom: 4px;
+  }
+
+  .operation p {
+    font-size: 16px;
+    color: var(--text-light);
+  }
+
+  /* ── PULL QUOTE ── */
+  .pull-quote {
+    text-align: center;
+    font-style: italic;
+    font-size: 19px;
+    color: var(--accent);
+    padding: 16px 20px;
+    border-top: 1px solid var(--rule-light);
+
+    margin: 40px 0;
+    line-height: 1.6;
+  }
+
+  /* ── CASCADE ── */
+  .cascade-step {
+    display: flex;
+    gap: 18px;
+    margin-bottom: 12px;
+    position: relative;
+  }
+
+  .cascade-num {
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    background: var(--accent);
+    color: var(--white);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    margin-top: 2px;
+  }
+
+  .cascade-body h4 {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--accent);
+    margin-bottom: 3px;
+  }
+
+  .cascade-body p {
+    font-size: 15.5px;
+    color: var(--text-light);
+    margin-bottom: 0;
+  }
+
+  .cascade-arrow {
+    display: flex;
+    justify-content: center;
+    padding: 4px 0 4px 16px;
+    color: var(--rule);
+    font-size: 20px;
+  }
+
+  /* ── EXCLUSION STAGES ── */
+  .stage-card {
+    background: var(--card);
+    border-radius: 4px;
+    padding: 16px 20px;
+    margin-bottom: 6px;
+  }
+
+  .stage-card h4 {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--accent);
+    margin-bottom: 2px;
+  }
+
+  .stage-card p {
+    font-size: 15px;
+    color: var(--text-light);
+    margin-bottom: 0;
+  }
+
+  .stage-arrow {
+    text-align: center;
+    color: var(--rule);
+    font-size: 22px;
+    padding: 2px 0;
+  }
+
+  /* ── RISK MATRIX ── */
+  .matrix-intro {
+    font-style: italic;
+    color: var(--text-light);
+    margin-bottom: 28px;
+  }
+
+  .matrix-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14.5px;
+    margin-bottom: 20px;
+  }
+
+  .matrix-table thead th {
+    background: var(--accent);
+    color: var(--white);
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 10px 12px;
+    text-align: left;
+  }
+
+  .matrix-table tbody tr:nth-child(even) {
+    background: var(--card);
+  }
+
+  .matrix-table td {
+    padding: 12px;
+    vertical-align: top;
+    border-bottom: 1px solid var(--rule-light);
+  }
+
+  .matrix-table td:first-child {
+    font-weight: 600;
+    color: var(--text);
+    white-space: nowrap;
+  }
+
+  .matrix-table td:nth-child(2) {
+    color: var(--text-light);
+  }
+
+  .risk-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 6px;
+    vertical-align: middle;
+  }
+
+  .risk-high { background: var(--risk-high); }
+  .risk-med { background: var(--risk-med); }
+  .risk-low { background: var(--risk-low); }
+
+  .legend {
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    color: var(--text-light);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--rule-light);
+  }
+
+  .legend span {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  /* ── CLOSING ── */
+  .closing {
+    text-align: center;
+    padding: 80px 24px;
+    border-top: 1px solid var(--rule-light);
+  }
+
+  .closing h2 {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 30px;
+  }
+
+  .closing-questions {
+    font-style: italic;
+    font-size: 17px;
+    color: var(--text-light);
+    line-height: 1.75;
+    max-width: 540px;
+    margin: 0 auto 50px;
+  }
+
+  .closing-questions .emphasis {
+    font-weight: 700;
+    font-style: normal;
+    color: var(--accent);
+  }
+
+  .closing-formula {
+    border-top: 1px solid var(--rule-light);
+    padding-top: 30px;
+    margin-top: 30px;
+  }
+
+  .closing-formula p:first-child {
+    color: var(--text-light);
+    font-size: 16px;
+  }
+
+  .closing-formula p:last-child {
+    font-weight: 700;
+    color: var(--accent);
+    font-size: 16px;
+  }
+
+  .footer {
+    text-align: center;
+    padding: 40px 0 60px;
+    border-top: 1px solid var(--rule-light);
+  }
+
+  .footer-brand {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    letter-spacing: 6px;
+    color: var(--text-faint);
+  }
+
+  .footer-tagline {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    color: var(--text-faint);
+    margin-top: 6px;
+  }
+
+  .bold-sentence {
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  @media (max-width: 600px) {
+    .matrix-table { font-size: 13px; }
+    .matrix-table td:first-child { white-space: normal; }
+    .legend { flex-direction: column; gap: 8px; }
+  }
+
+@media print {
+    @page {
+      size: A4;
+      margin: 2cm;
+    }
+
+    body {
+      background: white;
+      color: black;
+      font-size: 12pt;
+    }
+
+    .no-print {
+      display: none !important;
+    }
+
+    .chapter {
+      break-before: page;
+      page-break-before: always;
+    }
+
+    .closing {
+      break-before: page;
+      page-break-before: always;    
+    }
+
+    table, img, .card, .keep-together {
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    h1, h2, h3, h4, h5 {
+      break-after: avoid;
+      page-break-after: avoid;
+    }
+
+    p {
+      orphans: 3;
+      widows: 3;
+    }
+  }
+
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover">
+  <div class="cover-brand">C O A G N E S</div>
+  <div class="cover-sub-brand">Structural Analysis</div>
+  <div class="divider"></div>
+  <h1>The Displaced Verb</h1>
+  <div class="cover-subtitle">On the Grammar of Accountability<br>in the Age of Artificial Intelligence</div>
+  <div class="cover-epigraph">
+    "AI will take your job" is not a forecast.<br>
+    It is a grammatical manoeuvre —<br>
+    assigning the verb to the wrong noun.
+  </div>
+  <div class="cover-method">
+    This document does not argue for or against artificial intelligence.
+    It examines the grammar by which responsibility is transferred,
+    and identifies the structural positions where human agency is quietly removed.
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- I. THE SENTENCE -->
+  <section class="chapter">
+    <div class="section-num">I.</div>
+    <div class="section-title">The Sentence</div>
+    <div class="section-rule"></div>
+
+    <p style="font-style:italic; color:var(--text-light);">Consider the sentence:</p>
+    <p style="font-size:21px; font-weight:700; color:var(--accent); margin:12px 0 20px;">"AI will replace millions of workers."</p>
+    <p>It is spoken daily — by journalists, executives, consultants, and politicians. It has the ring of prophecy. Yet it contains a precise structural deception.</p>
+    <p><span class="bold-sentence">Artificial intelligence does not employ anyone.</span> It has no authority to dismiss. It signs no contracts. It holds no fiduciary duty. It cannot be named in an employment tribunal.</p>
+
+    <div class="label" style="margin-top:36px;">The Grammatical Operation</div>
+
+    <div class="operation">
+      <h4>The subject is displaced.</h4>
+      <p>A decision made by a board, a chief executive, a shareholder resolution — is attributed to a technology. The verb "replace" migrates from human agent to inanimate tool.</p>
+    </div>
+    <div class="operation">
+      <h4>The object is abstracted.</h4>
+      <p>"Millions of workers" — not colleagues, not individuals with mortgages and children, not named persons. The abstraction permits emotional distance.</p>
+    </div>
+    <div class="operation">
+      <h4>The tense is prophetic.</h4>
+      <p>"Will replace" — future tense removes present accountability. No one is responsible for what has not yet happened, even as the decisions enabling it are taken today.</p>
+    </div>
+
+    <div class="pull-quote">
+      The technology becomes a screen upon which human decisions are projected as if they were natural forces.
+    </div>
+  </section>
+
+  <!-- II. THE CASCADE -->
+  <section class="chapter">
+    <div class="section-num">II.</div>
+    <div class="section-title">The Cascade</div>
+    <div class="section-rule"></div>
+
+    <p class="lead">Behind every redundancy attributed to artificial intelligence, there is a chain of human decisions. Each link in the chain is individually rational. Taken together, they produce a system in which people may be optimised out of existence — not by machines, but by other people, acting through machines.</p>
+
+    <div class="label" style="margin-top:32px;">The Chain of Agency</div>
+
+    <div class="cascade-step">
+      <div class="cascade-num">1</div>
+      <div class="cascade-body">
+        <h4>The Shareholder Mandate</h4>
+        <p>Returns must increase. Cost must decrease. This is not optional — it is the fiduciary grammar of the corporation. AI enters the sentence here: as a tool that promises to fulfil this grammar more efficiently.</p>
+      </div>
+    </div>
+    <div class="cascade-arrow">↓</div>
+
+    <div class="cascade-step">
+      <div class="cascade-num">2</div>
+      <div class="cascade-body">
+        <h4>The Executive Decision</h4>
+        <p>A named individual — a chief executive, a managing director — signs the restructuring order. The decision is human. The authority is human. The accountability, in law, is human.</p>
+      </div>
+    </div>
+    <div class="cascade-arrow">↓</div>
+
+    <div class="cascade-step">
+      <div class="cascade-num">3</div>
+      <div class="cascade-body">
+        <h4>The Operational Layer</h4>
+        <p>Departments are reorganised. Roles are redefined around automated processes. The language shifts from "dismissal" to "transformation." The affected individuals become "legacy headcount."</p>
+      </div>
+    </div>
+    <div class="cascade-arrow">↓</div>
+
+    <div class="cascade-step">
+      <div class="cascade-num">4</div>
+      <div class="cascade-body">
+        <h4>The Displacement</h4>
+        <p>Former employees enter a labour market that has been structurally narrowed by the same optimisation logic. Their skills, built over decades, are reclassified as redundant.</p>
+      </div>
+    </div>
+    <div class="cascade-arrow">↓</div>
+
+    <div class="cascade-step">
+      <div class="cascade-num">5</div>
+      <div class="cascade-body">
+        <h4>The Second Optimisation</h4>
+        <p>Those who fall through — into debt, into housing precarity, into the margins — encounter a welfare system itself under optimisation pressure. The system that produced their displacement now classifies them as inefficiency.</p>
+      </div>
+    </div>
+
+    <div class="pull-quote">
+      At no point in this chain does artificial intelligence make a decision.<br>
+      <strong>At every point, a human being does.</strong>
+    </div>
+  </section>
+
+  <!-- THE RECURSIVE TRAP -->
+  <section class="chapter">
+    <div class="section-num">III.</div>    
+    <div class="section-title">The Recursive Trap</div>
+    <div class="section-rule"></div>
+
+    <p>There is a structural recursion at work. The same optimisation logic that displaces individuals from employment is subsequently applied to the systems meant to support them. Housing assistance is measured by throughput. Mental health services are assessed by unit cost. The rhetoric that accompanies this — "the system should not support those who won't help themselves" — performs the same grammatical operation identified in Section I.</p>
+
+    <p>Once more, the verb is displaced. "Won't help themselves" attributes agency to the person least equipped to exercise it, and removes it from the institutions whose structural function is precisely to provide that help.</p>
+
+    <div class="label" style="margin-top:32px;">The Grammar of Exclusion</div>
+
+    <div class="stage-card">
+      <h4>Optimise</h4>
+      <p>People are removed from employment in pursuit of efficiency.</p>
+    </div>
+    <div class="stage-arrow">↓</div>
+    <div class="stage-card">
+      <h4>Displace</h4>
+      <p>The displaced are reclassified as a systemic burden.</p>
+    </div>
+    <div class="stage-arrow">↓</div>
+    <div class="stage-card">
+      <h4>Exclude</h4>
+      <p>Support systems are optimised to reduce the burden — by reducing the support.</p>
+    </div>
+
+    <p style="margin-top:28px;">This is not a conspiracy. It is a grammar — a set of structural habits by which accountability is distributed away from those who hold power and towards those who bear its consequences. Artificial intelligence accelerates the process, but it does not author it.</p>
+
+    <div class="pull-quote">
+      The question is not whether AI is dangerous.<br>
+      The question is who decides what it is used for,<br>
+      <strong>and who bears the cost of that decision.</strong>
+    </div>
+  </section>
+
+  <!-- III. THE MATRIX -->
+  <section class="chapter">
+    <div class="section-num">IV.</div>
+    <div class="section-title">The Matrix</div>
+    <div class="section-rule"></div>
+
+    <p class="matrix-intro">A clear delineation of what AI systems may risk, and what remains — structurally and legally — the province of human decision.</p>
+
+    <table class="matrix-table">
+      <thead>
+        <tr>
+          <th>Domain</th>
+          <th>AI Risk Zone</th>
+          <th>Human Responsibility</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="risk-dot risk-med"></span>Employment Decisions</td>
+          <td>Automates tasks, identifies "efficiency" patterns, models cost reduction</td>
+          <td>Decides who is made redundant, signs dismissal, owes duty of care</td>
+        </tr>
+        <tr>
+          <td><span class="risk-dot risk-high"></span>Structural Displacement</td>
+          <td>Amplifies speed of labour market contraction; narrows re-entry pathways</td>
+          <td>Designs retraining policy; allocates transition funding; regulates market impact</td>
+        </tr>
+        <tr>
+          <td><span class="risk-dot risk-high"></span>Welfare &amp; Support</td>
+          <td>May be used to triage, classify, or score individuals seeking assistance</td>
+          <td>Sets eligibility criteria; ensures due process; preserves human appeal</td>
+        </tr>
+        <tr>
+          <td><span class="risk-dot risk-med"></span>Public Discourse</td>
+          <td>Generates and amplifies narrative framing; normalises dehumanisation</td>
+          <td>Editorial accountability; platform governance; regulatory oversight</td>
+        </tr>
+        <tr>
+          <td><span class="risk-dot risk-high"></span>Accountability Architecture</td>
+          <td>Creates complexity that obscures causal chains; diffuses attribution</td>
+          <td>Maintains transparent decision records; ensures auditability and redress</td>
+        </tr>
+        <tr>
+          <td><span class="risk-dot risk-low"></span>Data &amp; Privacy</td>
+          <td>Processes personal data at scale; profiles behaviour; enables surveillance</td>
+          <td>Determines data policy; enforces GDPR; ensures consent and proportionality</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- CLOSING -->
+  <div class="closing">
+    <h2>The Questions That Remain</h2>
+
+    <div class="closing-questions">
+      If a technology cannot sign a contract of employment,
+      how can it bear responsibility for ending one?<br><br>
+
+      If optimisation is the stated purpose,
+      and human displacement is the observed outcome —
+      at what point does the purpose become the outcome?<br><br>
+
+      If the rhetoric of "AI replacement" serves to diffuse
+      accountability across an impersonal system —
+      whose interests does that diffusion protect?<br><br>
+
+      If the displaced become a cost to be further optimised,
+      and the optimisation itself displaces further —
+      who is responsible for interrupting the recursion?<br><br>
+
+      If we accept the grammar of the displaced verb —
+      "AI will take your job" —<br>
+      <span class="emphasis">we have already consented<br>
+      to the disappearance of the person who gave the order.</span>
+    </div>
+
+  </div>
+
+  <div class="footer">
+    <div class="footer-brand">C O A G N E S</div>
+    <div class="footer-tagline">Question · Reveal · Project</div>
+    <div class="footer-tagline" style="margin-top:4px;">coagnes.com</div>
+  </div>
+
+</div>
+
+</body>
+</html>
