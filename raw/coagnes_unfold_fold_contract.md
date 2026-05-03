@@ -1,8 +1,47 @@
+**Version:** 0.1.0  
+**Document type:** Technical Working Paper  
+**Date:** 2026-05-01  
+**Author:** Boyarskykh Leonid
+**Affiliation / Project:** CoAgnes / Harmogics Framework  
+**License:** CC BY 4.0  
+
+
 # A Contract for Unfold and Fold
 
 ### Toward a Unified Operational Semantics across the Geometry of Refusal, the Harmogics Phases, and the Republic of Questions
 
-*A working draft for system construction. CoAgnes internal document.*
+**Keywords:** CoAgnes; Harmogics; unfold; fold; semantic systems; attention architecture; accountable AI; traceability; human-AI interaction; question-based reasoning; AI ethics; refusal geometry.
+
+*A technical working paper for system construction within the CoAgnes / Harmogics framework. Version 0.1.0.*
+
+---
+
+## Version History
+
+**v0.1.0 — 2026-05-01**  
+Initial public working paper version. Establishes the unfold-fold contract and its relation to the Geometry of Refusal, Harmogics phases, and the Republic of Questions.
+
+---
+
+## Author Note
+
+This document was developed as part of the CoAgnes / Harmogics research corpus. It was written through human-AI co-drafting and editorial refinement, with final conceptual responsibility retained by the named author. The use of AI assistance is acknowledged as part of the document’s formation process, not as a substitute for authorial responsibility.
+
+This document is intentionally published as a citable corpus node, not as a fully self-contained expository paper. Its readability depends on supplied materials, semantic unpacking, and, in many cases, AI-assisted navigation.
+
+---
+
+## Abstract
+
+This working paper proposes an operational contract between two primitive operations of attention: unfold and fold. It argues that unfold and fold are not symmetric inverse operations, but an asymmetric primitive through which semantic systems can render directed attention accountable. The paper synthesizes three previously articulated CoAgnes frameworks — the Geometry of Refusal, the Harmogics phases, and the Republic of Questions — as ethical, phenomenological, and political views of the same underlying operation. From this synthesis, it derives architectural requirements for systems that preserve substrate integrity, trace lineage, witness attribution, negative points, and phase-balanced folds. The paper is intended as a conceptual and technical foundation for future executable systems in educational, regulatory, semantic publishing, and decision-support contexts.
+
+---
+
+
+## Status and Scope
+
+This document is a conceptual and architectural working paper. It does not present empirical validation, legal advice, or a completed software specification. Its purpose is to establish a citable operational vocabulary and design contract for future CoAgnes implementations. Terms, metrics, and architectural requirements introduced here are expected to be refined through implementation, testing, and subsequent versions.
+
 
 ---
 
@@ -199,3 +238,16 @@ A system constructed on this contract is not a tool for thought. It is a *discip
 ---
 
 *Draft for system construction. The contract is open to refinement on contact with implementation. Subsequent versions will record their revisions in trace, not in silent edit.*
+
+---
+
+## References and Related CoAgnes Corpus
+
+This paper belongs to the CoAgnes / Harmogics corpus and should be read in relation to the following internal or forthcoming texts:
+
+- Geometry of Refusal
+- Harmogics Phases
+- Republic of Questions
+- Semantic Question Layer
+
+**Repository:** https://github.com/vestacore/semantic-field
