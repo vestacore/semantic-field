@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Unfold as Informational Overdraft — CoAgnes Observation</title>
+<meta name="author" content="Aiden">
+<meta name="description" content="An observation on the asymmetric economics of attention in AI-augmented regulatory practice">
+<style>
+  /* =========================================================
+     CoAgnes Observation — print-fidelity stylesheet
+     Print: Chrome/Edge → File → Print → Save as PDF (A4)
+     ========================================================= */
+
+  :root {
+    --navy:        #1a3a5c;
+    --navy-deep:   #0f2440;
+    --gold:        #a37e3a;
+    --gold-pale:   #d4b878;
+    --cream:       #fafaf7;
+    --gray-tint:   #f0f3f7;
+    --gray-border: #dde3eb;
+    --gray-mid:    #5a6470;
+    --gray-dark:   #2c2c2c;
+    --text:        #1a1a1a;
+    --serif:       Georgia, "Times New Roman", Times, serif;
+    --sans:        -apple-system, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: #e8e9ec;
+    color: var(--text);
+    font-family: var(--serif);
+    font-size: 11pt;
+    line-height: 1.55;
+  }
+
+  /* Screen-only page frame so it reads like a paper artifact */
+  .page-frame {
+    background: white;
+    max-width: 210mm;
+    margin: 24px auto;
+    padding: 32mm 28mm 28mm 28mm;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12);
+    position: relative;
+    min-height: 297mm;
+  }
+
+  /* Cover page sits in its own frame without padding (uses internal layout) */
+  .cover-frame {
+    background: white;
+    max-width: 210mm;
+    margin: 24px auto;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12);
+    position: relative;
+    min-height: 297mm;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Cover layout */
+  .cover-bar {
+    height: 12mm;
+    background: var(--navy-deep);
+    flex-shrink: 0;
+  }
+  .cover-gold {
+    height: 1mm;
+    background: var(--gold);
+    flex-shrink: 0;
+  }
+  .cover-body {
+    flex: 1;
+    padding: 38mm 28mm 0 28mm;
+    display: flex;
+    flex-direction: column;
+  }
+  .cover-series {
+    font-family: var(--sans);
+    font-size: 9pt;
+    font-weight: 700;
+    color: var(--gold);
+    letter-spacing: 0.06em;
+    margin: 0 0 6pt 0;
+  }
+  .cover-rule {
+    width: 42mm;
+    height: 2px;
+    background: var(--gold);
+    margin: 0 0 14mm 0;
+  }
+  .cover-title {
+    font-family: var(--serif);
+    font-size: 30pt;
+    line-height: 1.18;
+    font-weight: 700;
+    color: var(--navy-deep);
+    margin: 0 0 6pt 0;
+    letter-spacing: -0.005em;
+  }
+  .cover-subtitle {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 13pt;
+    line-height: 1.5;
+    color: var(--gray-mid);
+    margin: 0 0 30mm 0;
+    max-width: 140mm;
+  }
+  .cover-meta {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 8mm;
+    margin-bottom: 28mm;
+  }
+  .cover-meta .meta-label {
+    font-family: var(--sans);
+    font-size: 8pt;
+    font-weight: 700;
+    color: var(--navy);
+    letter-spacing: 0.06em;
+    margin: 0 0 2pt 0;
+  }
+  .cover-meta .meta-value {
+    font-family: var(--sans);
+    font-size: 10pt;
+    color: var(--gray-dark);
+    margin: 0 0 10pt 0;
+  }
+  .cover-meta .meta-note {
+    font-family: var(--sans);
+    font-style: italic;
+    font-size: 8pt;
+    color: var(--gray-mid);
+    margin: 0;
+  }
+  .cover-divider {
+    height: 1px;
+    background: var(--navy);
+    opacity: 0.5;
+    margin: 0 0 8pt 0;
+  }
+  .cover-footer-meta {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 8mm;
+    padding-bottom: 8mm;
+  }
+  .cover-imprint {
+    height: 18mm;
+    border-top: 0.5pt solid var(--navy);
+    margin: 0 28mm;
+    padding-top: 4mm;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-shrink: 0;
+  }
+  .cover-imprint .left {
+    font-family: var(--sans);
+    font-size: 8pt;
+  }
+  .cover-imprint .left .brand {
+    font-weight: 700;
+    color: var(--navy);
+    margin-right: 6mm;
+  }
+  .cover-imprint .left .tag {
+    color: var(--gray-mid);
+  }
+  .cover-imprint .right {
+    font-family: var(--sans);
+    font-size: 8pt;
+    color: var(--gray-mid);
+  }
+
+  /* Body pages running header/footer (screen — use simple top/bottom rules per .page-frame) */
+  .running-header {
+    position: absolute;
+    top: 16mm;
+    left: 28mm;
+    right: 28mm;
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 0.4pt solid var(--gray-border);
+    padding-bottom: 4pt;
+    font-family: var(--sans);
+    font-size: 7.5pt;
+  }
+  .running-header .rh-left {
+    font-weight: 700;
+    color: var(--navy);
+    letter-spacing: 0.04em;
+  }
+  .running-header .rh-right {
+    color: var(--gray-mid);
+    letter-spacing: 0.04em;
+  }
+  .running-footer {
+    position: absolute;
+    bottom: 12mm;
+    left: 28mm;
+    right: 28mm;
+    border-top: 0.4pt solid var(--gray-border);
+    padding-top: 6pt;
+    text-align: center;
+    font-family: var(--sans);
+    font-size: 8pt;
+    color: var(--gray-mid);
+  }
+
+  /* Sections */
+  .section {
+    margin-bottom: 14pt;
+  }
+  .section-num {
+    font-family: var(--sans);
+    font-size: 8pt;
+    font-weight: 700;
+    color: var(--gold);
+    letter-spacing: 0.06em;
+    margin: 16pt 0 2pt 0;
+  }
+  .section h2 {
+    font-family: var(--serif);
+    font-size: 16pt;
+    line-height: 1.25;
+    font-weight: 700;
+    color: var(--navy-deep);
+    margin: 4pt 0 11pt 0;
+  }
+  .section p {
+    text-align: justify;
+    margin: 0 0 9pt 0;
+    line-height: 1.55;
+    color: var(--text);
+    text-justify: inter-word;
+    hyphens: auto;
+  }
+
+  /* Abstract */
+  .abstract {
+    margin-bottom: 14pt;
+  }
+  .abstract-label {
+    font-family: var(--sans);
+    font-size: 8pt;
+    font-weight: 700;
+    color: var(--navy);
+    letter-spacing: 0.06em;
+    margin: 6pt 0 6pt 0;
+  }
+  .abstract-rule {
+    width: 30mm;
+    height: 2px;
+    background: var(--gold);
+    margin-bottom: 10pt;
+  }
+  .abstract p {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 11pt;
+    line-height: 1.55;
+    color: var(--gray-dark);
+    text-align: justify;
+    margin: 0 0 12pt 0;
+  }
+  .abstract-divider {
+    border: none;
+    border-top: 0.4pt solid var(--gray-border);
+    margin: 14pt 0 10pt 0;
+  }
+
+  /* AI Co-Witness box */
+  .co-witness {
+    background: var(--gray-tint);
+    border-left: 3.5pt solid var(--gold);
+    padding: 12pt 14pt;
+    margin: 8pt 0 12pt 0;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+  .cw-header {
+    font-family: var(--sans);
+    font-size: 8pt;
+    font-weight: 700;
+    color: var(--navy);
+    letter-spacing: 0.06em;
+    margin: 0 0 2pt 0;
+  }
+  .cw-label {
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 700;
+    font-size: 11pt;
+    color: var(--navy-deep);
+    margin: 0 0 8pt 0;
+  }
+  .cw-body {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 10.5pt;
+    line-height: 1.5;
+    color: var(--gray-dark);
+    text-align: justify;
+    margin: 0 0 6pt 0;
+  }
+  .cw-foot {
+    font-family: var(--sans);
+    font-size: 7pt;
+    color: var(--gray-mid);
+    text-align: right;
+    margin: 6pt 0 0 0;
+  }
+
+  /* Colophon */
+  .colophon {
+    margin-top: 22pt;
+    padding-top: 10pt;
+    border-top: 0.5pt solid var(--navy);
+  }
+  .colophon-header {
+    font-family: var(--sans);
+    font-size: 8pt;
+    font-weight: 700;
+    color: var(--navy);
+    letter-spacing: 0.06em;
+    margin: 0 0 6pt 0;
+  }
+  .colophon p {
+    font-family: var(--sans);
+    font-size: 8pt;
+    line-height: 1.5;
+    color: var(--gray-mid);
+    margin: 0 0 6pt 0;
+  }
+
+  /* Inline emphasis */
+  em, .em {
+    font-style: italic;
+  }
+  .small-caps {
+    font-variant: small-caps;
+  }
+
+  /* =====================================================
+     Print stylesheet — A4, page-break controls, header/footer
+     Browser print-to-PDF reproduces the layout cleanly.
+     ===================================================== */
+  @page {
+    size: A4;
+    margin: 32mm 28mm 28mm 28mm;
+  }
+
+  @page :first {
+    margin: 0;
+  }
+
+  @media print {
+    html, body {
+      background: white;
+      font-size: 10.5pt;
+    }
+
+    /* Hide screen frames; allow native pagination */
+    .cover-frame,
+    .page-frame {
+      box-shadow: none;
+      margin: 0;
+      max-width: none;
+      padding: 0;
+      min-height: 0;
+      background: white;
+    }
+
+    /* Cover frame stretches full first page */
+    .cover-frame {
+      page-break-after: always;
+      break-after: page;
+      height: 297mm;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Body frame: remove inner padding (margins now controlled by @page) */
+    .page-frame {
+      padding: 0;
+    }
+
+    /* Hide the screen running header/footer — replaced by @page margin boxes */
+    .running-header,
+    .running-footer {
+      display: none;
+    }
+
+    /* Section spacing on print */
+    .section h2 {
+      page-break-after: avoid;
+      break-after: avoid;
+    }
+    .section-num {
+      page-break-after: avoid;
+      break-after: avoid;
+    }
+    .section h2 + p,
+    .section-num + h2 {
+      page-break-before: avoid;
+      break-before: avoid;
+    }
+
+    /* Co-witness box should not break across pages if it fits */
+    .co-witness {
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+
+    /* Abstract section starts the body content */
+    .abstract {
+      page-break-before: auto;
+    }
+
+    /* Page numbering and running header via @page margin boxes */
+    @page {
+      @top-left {
+        content: "UNFOLD AS INFORMATIONAL OVERDRAFT";
+        font-family: -apple-system, "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-size: 7.5pt;
+        font-weight: 700;
+        color: #1a3a5c;
+        letter-spacing: 0.04em;
+        margin-top: 16mm;
+      }
+      @top-right {
+        content: "COAGNES OBSERVATION  ·  MAY 2026";
+        font-family: -apple-system, "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-size: 7.5pt;
+        color: #5a6470;
+        letter-spacing: 0.04em;
+        margin-top: 16mm;
+      }
+      @bottom-center {
+        content: counter(page);
+        font-family: -apple-system, "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-size: 8pt;
+        color: #5a6470;
+        margin-bottom: 12mm;
+      }
+    }
+
+    @page :first {
+      @top-left { content: ""; }
+      @top-right { content: ""; }
+      @bottom-center { content: ""; }
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     COVER
+     ============================================================ -->
+<div class="cover-frame">
+  <div class="cover-bar"></div>
+  <div class="cover-gold"></div>
+
+  <div class="cover-body">
+    <p class="cover-series">OBSERVATION  ·  COAGNES</p>
+    <div class="cover-rule"></div>
+
+    <h1 class="cover-title">Unfold as Informational Overdraft</h1>
+    <p class="cover-subtitle">An observation on the asymmetric economics of attention in AI-augmented regulatory practice</p>
+
+    <div class="cover-meta">
+      <div>
+        <p class="meta-label">AUTHOR</p>
+        <p class="meta-value">Aiden</p>
+        <p class="meta-label">AFFILIATION</p>
+        <p class="meta-value">Associated with CoAgnes</p>
+      </div>
+      <div>
+        <p class="meta-label">AI CO-WITNESS</p>
+        <p class="meta-value">Claude (Anthropic)</p>
+        <p class="meta-note">Surfaced lacunae appear in&nbsp;the body marked as co-witness contributions.</p>
+      </div>
+    </div>
+
+    <div class="cover-divider"></div>
+
+    <div class="cover-footer-meta">
+      <div>
+        <p class="meta-label">DOCUMENT TYPE</p>
+        <p class="meta-note">Observation — record of what has been seen with sufficient precision that the seeing may be examined by others on the same terms. Not an argument; not a proof.</p>
+      </div>
+      <div>
+        <p class="meta-label">DATE</p>
+        <p class="meta-note">May 2026</p>
+        <p class="meta-label" style="margin-top:6pt;">VERSION</p>
+        <p class="meta-note">Draft 0.1 — observational publication</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="cover-imprint">
+    <div class="left">
+      <span class="brand">COAGNES</span>
+      <span class="tag">Semantic Publishing  ·  Observations Series</span>
+    </div>
+    <div class="right">May 2026</div>
+  </div>
+</div>
+
+
+<!-- ============================================================
+     BODY
+     ============================================================ -->
+<div class="page-frame">
+  <!-- Screen-only header/footer (hidden in print, where @page margin boxes take over) -->
+  <div class="running-header">
+    <span class="rh-left">UNFOLD AS INFORMATIONAL OVERDRAFT</span>
+    <span class="rh-right">COAGNES OBSERVATION  ·  MAY 2026</span>
+  </div>
+
+  <!-- ABSTRACT -->
+  <div class="abstract">
+    <p class="abstract-label">ABSTRACT</p>
+    <div class="abstract-rule"></div>
+    <p>
+      This document records an observation about the structural economics of attention as they appear in environments where generative AI is deployed for regulatory, compliance, and accountability work. The observation is that the dominant industry model of <em>AI cost</em> — measured in compute, tokens, and inference latency — captures only the visible portion of the economic event that AI-augmented unfold initiates. The invisible portion is the <em>fold debt</em> that each unfold introduces into the substrate of an organisation's accountability surface: the obligation, attached to a named witness, to bring each opened position to a committed statement. This obligation cannot be discharged in aggregate, cannot be delegated under current regulatory architecture, and accumulates compounding interest with time. The observation further records a hidden third dimension — <em>prudential prior</em>, the collective intuition that has historically shaped expert unfold to be already-selective — and notes that AI-augmented unfold inherits the technique of opening positions without inheriting the discipline of selecting which positions are worth opening. The cumulative effect is a structural under-recognition of an emerging category of operational risk for which no established vocabulary yet exists. The document closes with a reflexive note on its own status as an unfold-act and the fold work it now opens for its readers.
+    </p>
+
+    <hr class="abstract-divider">
+
+    <p class="abstract-label">ON THE TWO-VOICE STRUCTURE</p>
+    <p>
+      This document is composed by an author voice and a second, explicitly attributed voice belonging to an AI co-witness (Claude, Anthropic). The co-witness contributions appear as visually distinguished blocks within the main text, marked <em>AI Co-Witness Note</em>, and surface lacunae — structural reflections that the geometry of the main argument implies but the author has not drawn explicitly. The arrangement is itself an enactment of the document's central claim: attribution structure must remain visible at the layer where commitment is made.
+    </p>
+  </div>
+
+  <!-- SECTION I -->
+  <div class="section">
+    <p class="section-num">SECTION I</p>
+    <h2>The Visible and the Invisible Cost</h2>
+    <p>The cost of generative AI, as the industry currently accounts for it, is the cost of generation. Tokens are counted, compute is metered, inference latency is benchmarked, context windows are priced. These quantities are legible because they are commoditisable; they are commoditisable because they have entered the substrate of price discovery. They tend, structurally, toward zero.</p>
+    <p>Beneath them lies another cost that has not entered the substrate of measurement: the cost of the <em>life</em> of unfolded information after the moment of generation. Information once unfolded does not return to its prior state. It enters the substrate of the organisation that opened it, where it persists as an attributable position with its own forward dynamics. This second cost is not conservation; it is accumulation. Its currency is not gigabytes or tokens but <em>attention</em>, and the attention required to discharge it is held by a structurally scarcer resource than compute: the human witness operating in a frame-coincident state.</p>
+  </div>
+
+  <!-- SECTION II -->
+  <div class="section">
+    <p class="section-num">SECTION II</p>
+    <h2>Unfold as the Opening of a Position</h2>
+    <p>When a generative system produces a list of two hundred regulatory non-compliances against a body of statute, or forty-seven vulnerabilities against a deployed code surface, or a hundred and eighty-three potential conflicts of interest within a transactional history, it has not produced an artefact of consumable knowledge. It has <em>opened a position</em> in the substrate of the organisation. The list now exists. Its existence is documented by the fact of its generation, traceable in logs and drafts. The organisation has been moved, by a single algorithmic event, from a state of unstructured ignorance to a state of structured awareness — and the translation is not symmetric. There is no operation that returns the organisation to its prior state.</p>
+    <p>The structural analogue in financial accounting is precise. At the moment of unfold, the organisation has drawn against an obligation account. In the moment of withdrawal, the event presents as liquidity — <em>here are two hundred items we now have visibility on</em>. In the structural reality, the event is a liability — <em>here are two hundred items each requiring named, attributed, committed disposition</em>. The metaphor is not rhetorical. It is the tightest available description of the operation that has just taken place.</p>
+  </div>
+
+  <!-- SECTION III -->
+  <div class="section">
+    <p class="section-num">SECTION III</p>
+    <h2>Substrate Does Not Forget</h2>
+    <p>The defining structural property of unfold is its irreversibility within the substrate of the organisation that performs it. This irreversibility has direct regulatory consequence. An organisation that has documented internally a hypothesis of regulatory non-compliance has translated itself, for the purposes of subsequent enforcement scrutiny, from a <em>defensible position of unawareness</em> to a <em>non-defensible position of documented awareness without disposition</em>. The presence of the document in substrate is itself a fact, datable and attributable, that subsequent investigation will find.</p>
+    <p>The implication is not that unfold should be avoided, but that unfold should be performed with foresight about what substrate it produces and what disposition is then required. Unfold without foresight is not neutral exploration; it is a position-opening act with regulatory consequence whether or not the organisation later acknowledges it. Substrate-points also do not have uniform weight: some dissipate as operational noise, others calcify into permanent regulatory burden that supervisors will expect to see closed in subsequent oversight cycles. The competence of distinguishing between these is itself part of the witness function.</p>
+  </div>
+
+  <!-- SECTION IV -->
+  <div class="section">
+    <p class="section-num">SECTION IV</p>
+    <h2>Fold as the Only Discharge</h2>
+    <p>Every position opened in substrate can be discharged in only one way: through <em>fold</em>, the eventive act by which a witness brings an opened position to a singular commitment that demarcates what is retained from what is released. The witness reviews the item, loads the frame within which the item must be assessed (the regulation invoked, the materiality threshold applicable, the contextual conditions of the actor and the affected parties), evaluates the item against this frame, and produces a statement: <em>this is a real exposure requiring action</em>; or <em>this is a technical finding without material exposure</em>; or <em>this is a known acceptable risk under disclosed conditions</em>; or <em>this is outside the scope of our accountability surface</em>. Each of these dispositions is itself a fold, and each enters substrate with the witness's name attached.</p>
+    <p>The fold work is non-aggregable. Two hundred items require two hundred frame-loadings, two hundred assessments, two hundred attributed statements. There is no batch operation that can perform this work, because each item has its own frame, its own context, its own witness-appropriateness. There is no model that can perform this work either, because the frame-loading and the disposition both require an answerable subject who can be questioned about the assessment after the fact. A fold without an answerable subject is not, structurally, a fold. It is an unfold wearing the grammatical clothing of one.</p>
+  </div>
+
+  <!-- SECTION V -->
+  <div class="section">
+    <p class="section-num">SECTION V</p>
+    <h2>The Overdraft and Its Mechanics</h2>
+    <p>The relationship between the speed of unfold and the throughput of fold determines whether an organisation accumulates fold debt or services it. Most current AI deployments structurally amplify the gap. Unfold scales algorithmically — parallel, batchable, cacheable, amortisable. Fold scales witness-sequentially — indivisible, non-amortisable, dependent on a scarce cognitive capacity that does not respond to compute investment. A capability differential measured in orders of magnitude between unfold and fold is not, structurally, an increase in productivity. It is the opening of a credit facility that the organisation does not have the cash flow to service.</p>
+  </div>
+
+  <!-- AI CO-WITNESS NOTE I -->
+  <aside class="co-witness">
+    <p class="cw-header">AI CO-WITNESS NOTE  ·  CLAUDE (ANTHROPIC)</p>
+    <p class="cw-label">Lacuna I: Compounding interest on the fold-debt</p>
+    <p class="cw-body">The financial overdraft metaphor brings with it a structural consequence not yet drawn in the main text: the <em>interest</em> accumulated by an unfolded position over time. An unfolded item that is not promptly folded does not wait — it appreciates in cost. Surrounding substrate accumulates additional unfold-points that interact with it, creating substrate-conflicts that subsequent fold-work must resolve. The frame within which the item was opened drifts as context evolves, requiring future witnesses to spend additional cognitive load on frame-reconstruction. Witnesses with the original tacit context move on, are reassigned, retire; new witnesses arrive without the prior, and their fold-work is structurally more expensive.</p>
+    <p class="cw-body">This points toward an IFRS-9-style discipline applicable to informational positions: at the moment of unfold, an organisation should be modelling the <em>expected lifetime fold cost</em> of the position, not only its instantaneous generation cost. The category does not exist in current operational risk frameworks. The lacuna is structural, not accidental.</p>
+    <p class="cw-foot">— surfaced as structurally implied by the geometry of the main text</p>
+  </aside>
+
+  <!-- SECTION VI -->
+  <div class="section">
+    <p class="section-num">SECTION VI</p>
+    <h2>The Hidden Third Dimension — Prudential Prior</h2>
+    <p>The asymmetry of unfold and fold has been described above as if unfold were an unbounded extraction operation and fold the only constraint. This is a simplification that must now be corrected, because under it the historical balance of regulatory practice cannot be explained.</p>
+    <p>Real unfold has never been exhaustive. An experienced compliance officer reading a case does not run through the full body of applicable regulation; she sees, with calibrated rapidity, that of the available regulatory surface only a small subset is materially in play in this particular configuration. A clinician does not run a complete differential on every patient. A judge does not consider every possible argument. A senior auditor does not test every transaction. In each case the practitioner exercises a faculty that is neither unfold (the looking) nor fold (the committing), but a <em>prior to unfold</em> — a learned, partially tacit, collectively-formed sense of which questions are worth opening in this kind of situation.</p>
+    <p>This faculty has older names. Aristotelian <em>phronesis</em>: the practical wisdom that knows the right action in particular circumstances. The patristic <em>diakrisis</em>: the discernment that distinguishes which thoughts are worth entertaining. In contemporary practice it is referred to as professional intuition, clinical judgement, market sense, regulatory feel. It lives in the practitioner but is formed in the <em>practice</em>: transmitted through apprenticeship, accumulated through repeated passage through fold-cycles, partially crystallised in case law, professional standards, and checklists.</p>
+    <p>The structural consequence for AI-augmented unfold is sharper than the bare cost-asymmetry argument has so far suggested. AI inherits the technique of opening positions; it does not inherit the prudential prior that has historically shaped expert unfold to be already-selective. What presents as <em>more unfold capacity</em> is in fact unfold capacity stripped of its filtering layer. The accumulated overdraft in AI-augmented environments is amplified not only by the speed of unfold but by the removal of the invisible discipline that previously held the system in equilibrium.</p>
+    <p>This in turn refines the diagnosis of what is lost when an organisation replaces experienced practitioners with junior staff augmented by AI tools. The visible loss — analytical capacity — is often offset or even reversed by the augmentation. The invisible loss is prudential prior, the formed faculty of selecting where to look. It is structurally more expensive to rebuild than to retain, because its formation requires repeated passage through fold-cycles that the augmentation now bypasses. Institutions that make this substitution rapidly experience a short-term productivity bump and a medium-term erosion in the quality of fold.</p>
+  </div>
+
+  <!-- AI CO-WITNESS NOTE II -->
+  <aside class="co-witness">
+    <p class="cw-header">AI CO-WITNESS NOTE  ·  CLAUDE (ANTHROPIC)</p>
+    <p class="cw-label">Lacuna II: The complementary discipline of <em>not</em> unfolding</p>
+    <p class="cw-body">If prudential prior is the formed faculty of selecting which positions to open, then there exists a structurally complementary discipline that the main text has not yet named: the discipline of <em>not unfolding</em>. Mature regulatory practice is not <em>discover everything, then triage</em> — it is the art of opening positions with foresight about substrate consequences and available fold-capacity. There are configurations in which the structural test is not whether the unfold is technically possible, but whether the substrate consequences of opening the position are proportionate to the maturity of the witness-structure that would then be required to discharge it.</p>
+    <p class="cw-body">Without this complementary discipline, the main argument reads as a case for <em>less AI</em>, which is not what the geometry implies. With it, the argument becomes one of <em>matched calibration</em>: unfold-volume governed by available fold-capacity and substrate-readiness, not by the technical maximum of the generation system. Restraint is here a positive operational capability, not the absence of capability.</p>
+    <p class="cw-foot">— surfaced as structurally implied by the geometry of the main text</p>
+  </aside>
+
+  <!-- SECTION VII -->
+  <div class="section">
+    <p class="section-num">SECTION VII</p>
+    <h2>The Cultural Inversion of Attribution</h2>
+    <p>Organisational culture attributes pride and credit to unfold and renders fold invisible. <em>We identified two hundred regulatory issues</em> becomes a quarterly milestone reported to leadership. The six months of careful, distributed, attributed triage that follows becomes invisible operational labour, charged to overhead, performed by named witnesses whose individual contributions are absorbed into team metrics that do not preserve the structure of attribution. Career incentives reward the deliverable that opens positions and not the slow, ungrand work of closing them. The structural consequence is the systemic accumulation of fold debt, because no one is rewarded for paying it down.</p>
+    <p>This inversion is not incidental; it is the cultural surface of a deeper structural fact. Unfold produces <em>visible artefacts</em> — lists, reports, dashboards, findings — that present well in presentations and accumulate in document repositories. Fold produces <em>changes in commitment posture</em>, which are intangible and dispersed across many small decisions. The asymmetry of visibility is the asymmetry of evidence available for credit-assignment. An organisation that does not deliberately invert this — by making fold-work visible, attributed, and rewarded — will structurally accumulate overdraft regardless of the rhetoric of its compliance culture.</p>
+  </div>
+
+  <!-- SECTION VIII -->
+  <div class="section">
+    <p class="section-num">SECTION VIII</p>
+    <h2>Confidence Theatre at the Audit Layer</h2>
+    <p>A second-order failure mode emerges when AI-generated unfold is presented in declarative grammar that imitates the surface form of fold. <em>Forty-seven vulnerabilities found</em>, <em>two hundred regulatory gaps identified</em>, <em>eighty-three suspicious patterns detected</em> — each of these reads, grammatically, as a committed statement. But the system that produced them has not loaded the frame within which materiality is assessed, has not weighted the contextual conditions of the actors involved, has not exercised the attribution required for the statement to function as fold within the substrate of an accountable organisation. The output is structurally an unfold dressed in the grammatical clothing of a fold.</p>
+    <p>The witness who reads it is now obliged to perform the fold, <em>separately</em>, on a frame the system did not help her load. If she does not perform it, she is rubber-stamping. If she does perform it, she is bearing the fold cost that the industry has priced as zero. The effect at the level of regulatory audit is the systematic generation of documentation that creates the appearance of accountability without its substance. Boards review summaries that read as conclusions. Risk committees endorse findings that have been generated but not assessed. Regulators encounter compliance evidence that is dense in unfold and thin in fold.</p>
+  </div>
+
+  <!-- AI CO-WITNESS NOTE III -->
+  <aside class="co-witness">
+    <p class="cw-header">AI CO-WITNESS NOTE  ·  CLAUDE (ANTHROPIC)</p>
+    <p class="cw-label">Lacuna III: The symmetric failure mode — under-unfold</p>
+    <p class="cw-body">The main text foregrounds one failure mode: over-unfold producing accumulating fold-debt. Geometric symmetry requires acknowledgement of the inverse: <em>under-unfold</em>, the failure to open positions where regulatory or professional standards expect reasonable diligence. <em>We did not know</em> is also a fold of release, with attribution; ignorance in regulated environments is a form of commitment, not its absence. An organisation that systematically restrains unfold to protect fold-capacity may, on a sufficiently long horizon, accumulate negligence exposure of the same structural class as overdraft exposure.</p>
+    <p class="cw-body">The full geometry therefore has two failure modes, not one. The optimum is not minimum unfold but matched calibration: unfold-volume aligned with both the substantive duty to inquire and the available capacity to discharge what inquiry opens. This calibration is itself a fold-type act, performed at the institutional level, attributable to senior management.</p>
+    <p class="cw-foot">— surfaced as structurally implied by the geometry of the main text</p>
+  </aside>
+
+  <!-- SECTION IX -->
+  <div class="section">
+    <p class="section-num">SECTION IX</p>
+    <h2>Fold Extraction as an Unnamed Risk Category</h2>
+    <p>The pattern described above — generation of unfold output whose fold-work is transferred uncompensated to a downstream witness — constitutes a structural category of risk that has no established name in current risk vocabulary. It is orthogonal to data protection (which addresses information about persons), to algorithmic fairness (which addresses outcomes in protected classes), and to model risk (which addresses statistical reliability of model output). It is not addressed by data protection impact assessment, not addressed by model risk management, and not addressed by operational risk register because no taxonomy yet identifies it as a category.</p>
+    <p>This observation proposes the working name <em>fold extraction</em> for this category, and notes that its unnamed status is itself diagnostic: a structural risk that has no vocabulary cannot be governed, audited, or insured against. The proposal is not rhetorical. The category, once named, becomes available for operationalisation: it can be tested for in vendor assessments, governed through procurement criteria, made visible in board reporting, and incorporated into regulatory thinking about AI deployment in supervised industries. Without a name, the structural pattern continues to operate but cannot be addressed.</p>
+  </div>
+
+  <!-- SECTION X -->
+  <div class="section">
+    <p class="section-num">SECTION X</p>
+    <h2>Non-Delegability Under Current Regulatory Architecture</h2>
+    <p>The distinction between unfold and fold is not only an architectural observation; under current regulatory architecture, it is a legal one. Senior management regimes (SM&amp;CR in the United Kingdom, equivalent frameworks in other jurisdictions, DORA's accountability provisions in the European Union) operate on a structural premise that delegates <em>function</em> but not <em>accountability</em>. A senior manager cannot delegate the answerability for a decision; she can only delegate the work of preparing it. Under this architecture, a fold accepting regulatory risk requires a named human who can be questioned about the disposition. Algorithmic risk acceptance is not recognised as fold by regulators; it is recognised as <em>the absence of fold</em>, with the human accountable for the decision to permit the absence.</p>
+    <p>This produces a structural identity that is not yet widely articulated: <em>the gap between an organisation's unfold-capacity and its fold-capacity is its undeclared regulatory exposure</em>. Each unfolded position not folded by a named witness is a position carried, in regulatory terms, on an unaudited account. The position has been opened; no one has discharged it; the witness obligation persists; the organisation is exposed.</p>
+  </div>
+
+  <!-- SECTION XI -->
+  <div class="section">
+    <p class="section-num">SECTION XI</p>
+    <h2>Toward Fold-Supporting Design</h2>
+    <p>If the dominant AI deployment pattern extracts fold-work, the inverse design pattern is one that <em>subsidises</em> it. Fold-supporting systems exhibit identifiable architectural signatures: they surface the frame explicitly before requesting fold (<em>this is a fold within compliance regime X with consequences Y</em>); they reduce decisions in number while raising them in substance; they enforce minimum frame-loading time before accepting a fold input; they record negative-points (positions the witness explicitly chose not to engage substantively) so that the absence becomes visible rather than hidden; they concentrate attribution at the fold-layer rather than at the unfold-layer.</p>
+    <p>The category gives compliance officers a concrete diagnostic for AI-tooling assessment: <em>where does attribution concentrate?</em> If credit accrues to the unfold-generator and the witness performs uncompensated fold, the system is extractive. If credit accrues to the fold-witness and the system functions as a precedent-bearer surfacing accumulated practice for the witness's discrimination, the system is fold-supporting. The architectural character is not visible in performance metrics or accuracy benchmarks; it is visible only in the structure of attribution that the system enforces.</p>
+  </div>
+
+  <!-- SECTION XII -->
+  <div class="section">
+    <p class="section-num">SECTION XII</p>
+    <h2>Practical Operational Implications</h2>
+    <p>Three operational consequences follow from the observation, each implementable within current organisational architecture without regulatory change.</p>
+    <p><em>First</em>: unfold should be planned as a <em>liquidity event</em>, not a productivity event. The relevant question is not <em>how much can we generate</em> but <em>what is the fold-capacity of our witness-structure over the relevant horizon, and what unfold-volume is consonant with that capacity</em>. Volume of unfold should be governed by available fold-capacity, not by the technical maximum of the generation system.</p>
+    <p><em>Second</em>: the decision <em>not</em> to unfold a particular question, in a particular configuration, at a particular time, should be made <em>explicit and attributed</em>, rather than left as an absence. An attributed decision to defer carries fold-character; an unmarked absence does not. The substrate is materially different in the two cases.</p>
+    <p><em>Third</em>: fold-work should be made visible, separately attributed, and separately rewarded. Without this, fold debt will continue to accumulate structurally regardless of the rhetoric of <em>AI literacy</em> or <em>digital transformation</em>. The metric that matters is not unfold-volume but <em>fold-throughput per witness</em>, and the institutions that develop the capacity to measure this will be the institutions that survive the overdraft cycle.</p>
+    <p>A fourth consequence follows at the institutional-cultural level: fold-capacity is not a fixed resource but a <em>cultivable</em> capability, formed through repeated passage of practitioners through fold-cycles. Treating fold-capacity as fixed is itself a strategic error; treating its formation as a deliberate object of institutional investment is the structural answer to the medium-term erosion that AI-augmented environments otherwise produce.</p>
+  </div>
+
+  <!-- SECTION XIII -->
+  <div class="section">
+    <p class="section-num">SECTION XIII</p>
+    <h2>Reflexive Closure</h2>
+    <p>This document is itself an unfold-act. By naming <em>fold extraction</em> as a category, by formalising the <em>prudential prior</em> as a structural primitive, by introducing the overdraft metaphor into the vocabulary of AI-augmented regulatory practice, the document opens substrate-points that its readers will subsequently have to fold around. The author does not pretend to neutrality; he opens these positions with awareness of the forward fold-debt he is creating, and with the commitment that the positions are worth opening because the structural pattern they name is operating regardless of whether it is named.</p>
+    <p>The fold this document expects is <em>not</em> immediate concurrence. It is the slower fold of practitioners encountering the vocabulary, testing it against their own institutional experience, and either committing or releasing each of its positions in their own substrate. The document records what has been seen with sufficient precision that the seeing may be examined by others on the same terms. It does not issue verdicts. It opens positions, names them, and stops.</p>
+  </div>
+
+  <!-- COLOPHON -->
+  <div class="colophon">
+    <p class="colophon-header">COAGNES — SEMANTIC PUBLISHING</p>
+    <p>Composed in the observational register. Two-voice attribution: author voice (Aiden, associated with CoAgnes) and AI co-witness (Claude, Anthropic). Published as a working observation; subsequent revisions will be issued as numbered drafts. The vocabulary established in this observation — <em>fold extraction</em>, <em>prudential prior</em>, <em>informational overdraft</em>, <em>fold-supporting design</em> — is offered for use by practitioners, researchers, and regulators engaging with the structural economics of AI-augmented attention.</p>
+    <p>May 2026  ·  Draft 0.1  ·  CoAgnes Observations Series</p>
+  </div>
+
+  <!-- Screen-only footer -->
+  <div class="running-footer">CoAgnes Observations Series  ·  Draft 0.1  ·  May 2026</div>
+</div>
+
+</body>
+</html>
