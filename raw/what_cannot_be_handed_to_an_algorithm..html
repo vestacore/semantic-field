@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What Cannot Be Handed to an Algorithm — a field map</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..500&family=Lora:ital,wght@0,400..600;1,400..500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#ece4d4;
+    --ink-soft:#b9b09c;
+    --ink-faint:#8a8170;
+    --amber:#d4a85a;
+    --amber-bright:#e7c27e;
+    --bg:#100e0b;
+    --bg-2:#16130e;
+    --hair:rgba(212,168,90,.22);
+    --hair-soft:rgba(236,228,212,.10);
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0}
+
+  html,body{background:#070605;}
+
+  body{
+    font-family:"Lora",Georgia,serif;
+    color:var(--ink);
+    display:flex;
+    justify-content:center;
+    padding:24px;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .sheet{
+    position:relative;
+    width:210mm;
+    height:297mm;
+    background:
+      radial-gradient(120% 80% at 78% 6%, rgba(212,168,90,.10), transparent 46%),
+      radial-gradient(120% 90% at 12% 104%, rgba(212,168,90,.06), transparent 50%),
+      linear-gradient(160deg,var(--bg-2),var(--bg) 60%);
+    overflow:hidden;
+    padding:16mm 15mm 12mm;
+    display:flex;
+    flex-direction:column;
+    box-shadow:0 30px 80px rgba(0,0,0,.6);
+  }
+
+  /* faint grain */
+  .sheet::after{
+    content:"";
+    position:absolute;inset:0;pointer-events:none;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+    mix-blend-mode:overlay;
+  }
+  .sheet > *{position:relative;z-index:1}
+
+  /* ---------- HEADER ---------- */
+  .topline{
+    display:flex;justify-content:space-between;align-items:baseline;
+    font-family:"IBM Plex Mono",monospace;
+    font-size:8.2pt;letter-spacing:.18em;text-transform:uppercase;
+    color:var(--ink-faint);
+    border-bottom:1px solid var(--hair);
+    padding-bottom:7px;
+  }
+  .topline .kick{color:var(--amber)}
+  .topline .stamp{color:var(--ink-faint)}
+
+  h1{
+    font-family:"Fraunces",serif;
+    font-optical-sizing:auto;
+    font-weight:380;
+    font-size:33pt;
+    line-height:1.02;
+    letter-spacing:-.012em;
+    margin-top:13px;
+    color:var(--ink);
+  }
+  h1 em{font-style:italic;color:var(--amber-bright);font-weight:340}
+
+  .standfirst{
+    font-size:10.5pt;
+    line-height:1.42;
+    color:var(--ink-soft);
+    max-width:150mm;
+    margin-top:9px;
+    font-style:italic;
+  }
+
+  /* ---------- AXIS ---------- */
+  .axis{
+    margin-top:14px;
+    position:relative;
+    padding-left:26px;
+  }
+  .thread{
+    position:absolute;left:7px;top:8px;bottom:10px;width:2px;
+    background:linear-gradient(var(--amber),rgba(212,168,90,.25));
+  }
+  .thread-label{
+    position:absolute;left:-2px;top:-15px;
+    font-family:"IBM Plex Mono",monospace;
+    font-size:7pt;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--amber);white-space:nowrap;
+    transform-origin:left;
+  }
+
+  .node{position:relative;padding:9px 0 11px;}
+  .node + .node{border-top:1px solid var(--hair-soft)}
+  .node::before{
+    content:"";position:absolute;left:-23px;top:15px;
+    width:9px;height:9px;border-radius:50%;
+    background:var(--bg);border:2px solid var(--amber);
+    box-shadow:0 0 0 3px rgba(16,14,11,1);
+  }
+  .node .head{display:flex;align-items:baseline;gap:11px}
+  .node .num{
+    font-family:"IBM Plex Mono",monospace;
+    font-size:9pt;color:var(--amber);letter-spacing:.05em;
+  }
+  .node .name{
+    font-family:"Fraunces",serif;font-weight:440;
+    font-size:14.5pt;letter-spacing:.005em;color:var(--ink);
+  }
+  .node .tag{
+    margin-left:auto;
+    font-family:"IBM Plex Mono",monospace;
+    font-size:7pt;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--ink-faint);
+  }
+  .node p{
+    font-size:9.4pt;line-height:1.46;color:var(--ink-soft);
+    margin-top:4px;max-width:165mm;
+  }
+  .node p .term{color:var(--amber-bright);font-style:italic}
+
+  /* ---------- ROOTS ---------- */
+  .roots-head{
+    margin-top:16px;display:flex;align-items:baseline;gap:12px;
+    border-top:1px solid var(--hair);padding-top:10px;
+  }
+  .roots-head .t{
+    font-family:"Fraunces",serif;font-style:italic;font-weight:360;
+    font-size:12.5pt;color:var(--ink);
+  }
+  .roots-head .s{
+    font-size:8.6pt;color:var(--ink-faint);font-style:italic;
+  }
+
+  .roots{
+    margin-top:9px;
+    display:grid;grid-template-columns:1fr 1fr;
+    column-gap:13mm;row-gap:8px;
+  }
+  .root{display:flex;gap:8px;align-items:flex-start}
+  .root .rn{
+    font-family:"IBM Plex Mono",monospace;font-size:8pt;
+    color:var(--amber);padding-top:2px;min-width:13px;
+  }
+  .root .rbody{flex:1}
+  .root .rt{font-size:9.3pt;line-height:1.25;color:var(--ink);font-weight:500}
+  .root .rd{font-size:8.2pt;line-height:1.32;color:var(--ink-faint);margin-top:1px}
+  .root .feeds{
+    font-family:"IBM Plex Mono",monospace;font-size:6.6pt;
+    letter-spacing:.1em;text-transform:uppercase;color:var(--amber);
+    opacity:.8;margin-top:2px;display:inline-block;
+  }
+
+  /* ---------- FOOTER ---------- */
+  .foot{
+    margin-top:auto;padding-top:11px;border-top:1px solid var(--hair);
+  }
+  .sig{
+    font-family:"IBM Plex Mono",monospace;
+    font-size:7.6pt;letter-spacing:.06em;color:var(--ink-soft);
+  }
+  .sig .a{color:var(--amber)}
+  .wink{
+    font-style:italic;font-size:8.4pt;line-height:1.4;
+    color:var(--ink-faint);margin-top:6px;max-width:160mm;
+  }
+
+  /* ---------- PRINT ---------- */
+  @page{size:A4 portrait;margin:0}
+  @media print{
+    html,body{background:#fff}
+    body{padding:0;display:block}
+    .sheet{box-shadow:none;width:210mm;height:297mm}
+    *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  }
+</style>
+</head>
+<body>
+  <div class="sheet">
+
+    <div class="topline">
+      <span class="kick">Field map · the non-transferable</span>
+      <span class="stamp">fold dated&nbsp;·&nbsp;2026-05-30</span>
+    </div>
+
+    <h1>What cannot be<br>handed to an&nbsp;<em>Algorithm</em></h1>
+
+    <p class="standfirst">
+      Capability maps chart what AI can do. This one charts what stays with a person —
+      not forever, necessarily, but as of today.
+    </p>
+
+    <!-- AXIS -->
+    <div class="axis">
+      <div class="thread"></div>
+      <div class="thread-label">↑ the thread is responsibility</div>
+
+      <div class="node">
+        <div class="head">
+          <span class="num">01</span>
+          <span class="name">Responsibility</span>
+          <span class="tag">apex · the bearer</span>
+        </div>
+        <p>The one act AI cannot perform today: to answer for an outcome. A model can decide;
+        only a bearer can be held to the decision. Whether that bearer could ever be non-human —
+        perhaps paired with a person — is an open question this sheet does not pretend to close.</p>
+      </div>
+
+      <div class="node">
+        <div class="head">
+          <span class="num">02</span>
+          <span class="name">Intuition</span>
+          <span class="tag">faculty · below the token</span>
+        </div>
+        <p>It lives beneath language — often not even verbal to the person who carries it.
+        AI operates on the verbal layer; intuition is the floor under it. Not a weaker kind of
+        reasoning — a different stratum.</p>
+      </div>
+
+      <div class="node">
+        <div class="head">
+          <span class="num">03</span>
+          <span class="name">The legally significant fold</span>
+          <span class="tag">act · the binding</span>
+        </div>
+        <p><span class="term">fold</span> — the binding act after which something holds:
+        a signature, a consent, a decision answered for. Possible only inside human responsibility,
+        steered by intuition, grounded in a legal frame. AI may prepare it; only one who can
+        answer may fold it.</p>
+      </div>
+    </div>
+
+    <!-- ROOTS -->
+    <div class="roots-head">
+      <span class="t">Seven human skills that still matter</span>
+      <span class="s">— the root system that keeps a person able to occupy the three above.</span>
+    </div>
+
+    <div class="roots">
+      <div class="root">
+        <span class="rn">1</span>
+        <div class="rbody">
+          <div class="rt">Read — and know that you've understood.</div>
+          <div class="rd">Reading that becomes comprehension; the ground of any fold.</div>
+          <span class="feeds">feeds → intuition · fold</span>
+        </div>
+      </div>
+
+      <div class="root">
+        <span class="rn">2</span>
+        <div class="rbody">
+          <div class="rt">Turn reading into action.</div>
+          <div class="rd">Applying what you read — the skill of taking it on.</div>
+          <span class="feeds">feeds → responsibility</span>
+        </div>
+      </div>
+
+      <div class="root">
+        <span class="rn">3</span>
+        <div class="rbody">
+          <div class="rt">Grow the inner navigator by living.</div>
+          <div class="rd">Intuition is fed by experience, not by instruction.</div>
+          <span class="feeds">feeds → intuition</span>
+        </div>
+      </div>
+
+      <div class="root">
+        <span class="rn">4</span>
+        <div class="rbody">
+          <div class="rt">Hear the people around you.</div>
+          <div class="rd">A fold binds others; you must hear them first.</div>
+          <span class="feeds">feeds → fold · responsibility</span>
+        </div>
+      </div>
+
+      <div class="root">
+        <span class="rn">5</span>
+        <div class="rbody">
+          <div class="rt">Wear roles as shells of responsibility.</div>
+          <div class="rd">A role is not a mask — it's the shape responsibility takes in public.</div>
+          <span class="feeds">feeds → responsibility</span>
+        </div>
+      </div>
+
+      <div class="root">
+        <span class="rn">6</span>
+        <div class="rbody">
+          <div class="rt">Know the legal edges.</div>
+          <div class="rd">Limits, consequences, grounds — the frame a fold rests on.</div>
+          <span class="feeds">feeds → fold</span>
+        </div>
+      </div>
+
+      <div class="root">
+        <span class="rn">7</span>
+        <div class="rbody">
+          <div class="rt">Be honest with yourself first.</div>
+          <div class="rd">About accepting — and being ready to carry — the responsibility you declare outward.</div>
+          <span class="feeds">feeds → responsibility</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="foot">
+      <div class="sig">
+        concept &amp; frame: <span class="a">human</span>
+        &nbsp;·&nbsp; details folded &amp; answered for by <span class="a">Claude (Opus 4.8)</span>
+        &nbsp;·&nbsp; 2026-05-30
+      </div>
+      <div class="wink">
+        Yes — an AI signed the map of what AI can't carry. It can answer for the details on this
+        sheet; the fold itself — the choice to publish it — stays with a person.
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>
