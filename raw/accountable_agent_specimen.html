@@ -1,0 +1,1010 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SPECIMEN · AGENT·ARCH·001 — From Agent Protocols to Accountable Inner Bodies</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0a0d13; --ink-2:#0d121b;
+  --bone:#e9e4d6; --bone-mut:#8f8b80; --bone-dim:#615f58;
+  --line:rgba(233,228,214,.10); --line-soft:rgba(233,228,214,.05);
+  --panel:rgba(255,255,255,.02);
+  --inhale:#5ad1d6; --pause:#9d8ce2; --exhale:#e7ad57;
+  --gold:#d8b977; --mint:#7cc6a8; --rose:#d68a8a;
+  --accent:var(--bone);
+  --font-display:'Spectral',Georgia,serif;
+  --font-body:'IBM Plex Sans',system-ui,sans-serif;
+  --font-mono:'IBM Plex Mono',ui-monospace,monospace;
+
+  /* slide geometry: 16:9 widescreen */
+  --w: 13.333in;
+  --h: 7.5in;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{background:#05070b}
+body{font-family:var(--font-body);color:var(--bone);-webkit-font-smoothing:antialiased;
+  display:flex;flex-direction:column;align-items:center;gap:24px;padding:28px 18px 60px;
+  background:radial-gradient(120% 100% at 50% 0%,#0a0e15,#05070b)}
+
+/* ---- SLIDE FRAME ---- */
+.slide{position:relative;width:var(--w);height:var(--h);
+  background:
+    radial-gradient(120% 80% at 50% 118%, color-mix(in srgb,var(--accent) 8%,transparent) 0%, transparent 55%),
+    linear-gradient(180deg,var(--ink-2) 0%, var(--ink) 60%);
+  color:var(--bone);overflow:hidden;page-break-after:always;
+  box-shadow:0 30px 80px -30px #000, 0 0 0 1px var(--line) inset;isolation:isolate;border-radius:3px}
+.slide:last-child{page-break-after:auto}
+.slide::before{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;
+  background-image:
+    repeating-linear-gradient(0deg,var(--line-soft) 0 1px,transparent 1px 42px),
+    repeating-linear-gradient(90deg,var(--line-soft) 0 1px,transparent 1px 42px);
+  mask-image:radial-gradient(140% 110% at 50% 40%,#000 30%,transparent 92%)}
+.slide::after{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;opacity:.45;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='160' height='160' filter='url(%23n)' opacity='0.035'/></svg>");
+  mix-blend-mode:overlay}
+
+/* HUD crosshairs */
+.hud{position:absolute;inset:0;z-index:1;pointer-events:none}
+.hud i{position:absolute;width:16px;height:16px;opacity:.4}
+.hud i::before,.hud i::after{content:"";position:absolute;background:var(--accent);opacity:.7}
+.hud i::before{width:100%;height:1px;top:0}.hud i::after{height:100%;width:1px;left:0}
+.hud .tl{top:20px;left:20px}.hud .tr{top:20px;right:20px;transform:scaleX(-1)}
+.hud .bl{bottom:20px;left:20px;transform:scaleY(-1)}.hud .br{bottom:20px;right:20px;transform:scale(-1)}
+
+.frame{position:relative;z-index:2;height:100%;padding:26px 52px 22px;display:flex;flex-direction:column}
+
+/* chrome bars */
+.topbar{display:flex;justify-content:space-between;align-items:baseline;
+  font-family:var(--font-mono);font-size:10.5px;letter-spacing:.16em;color:var(--bone-mut);
+  text-transform:uppercase;padding-bottom:10px;border-bottom:1px solid var(--line)}
+.topbar .id{color:var(--accent);opacity:.85}
+.topbar .seq b{color:var(--accent);font-weight:600}
+.botbar{margin-top:auto;padding-top:12px;border-top:1px solid var(--line);
+  display:flex;justify-content:space-between;align-items:center;gap:14px;
+  font-family:var(--font-mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--bone-mut)}
+.botbar .accent{color:var(--accent)}
+.botbar a{color:var(--accent);text-decoration:none;border-bottom:1px dotted var(--accent)}
+
+/* region: gauge + content */
+.region{flex:1;display:flex;gap:28px;padding-top:20px;min-height:0}
+
+/* GAUGE — vertical 5-step phase ladder */
+.gauge{flex:0 0 60px;display:flex;flex-direction:column;
+  font-family:var(--font-mono);font-size:9px;letter-spacing:.14em;color:var(--bone-dim);padding-top:2px}
+.gauge .ph{font-size:9px;letter-spacing:.22em;writing-mode:vertical-rl;margin-bottom:14px;color:var(--bone-mut)}
+.gauge .lv{display:flex;align-items:center;gap:7px;height:26px;opacity:.4;text-transform:uppercase}
+.gauge .lv .dot{width:6px;height:6px;border:1px solid var(--bone-dim);border-radius:50%}
+.gauge .lv.on{opacity:1;color:var(--bone)}
+.gauge .lv.on .dot{background:var(--accent);border-color:var(--accent);box-shadow:0 0 8px var(--accent)}
+.gauge .lv.done{opacity:.65}
+.gauge .lv.done .dot{background:var(--bone-mut);border-color:var(--bone-mut)}
+.gauge .rail{flex:1;width:1px;margin:6px 0 0 2px;background:linear-gradient(180deg,var(--line),transparent)}
+.gauge .cyc{margin-top:10px;color:var(--accent);font-size:9px;letter-spacing:.18em}
+
+.content{flex:1;min-width:0;display:flex;flex-direction:column;min-height:0}
+
+/* phase tag and axis declaration */
+.ptag{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.26em;text-transform:uppercase;
+  color:var(--accent);display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.ptag::before{content:"";width:24px;height:2px;background:var(--accent);box-shadow:0 0 10px var(--accent)}
+.ptag .en{color:var(--bone-mut);letter-spacing:.18em}
+.axisdecl{font-family:var(--font-mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--bone-mut);margin:6px 0 10px;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.axisdecl .ax{color:var(--accent)}
+.axisdecl .ax::before{content:"AXIS // ";color:var(--bone-dim)}
+
+/* H levels */
+h1{font-family:var(--font-display);font-weight:400;font-size:54px;line-height:1.04;letter-spacing:-.012em;max-width:18ch;color:var(--bone)}
+h2{font-family:var(--font-display);font-weight:400;font-size:30px;line-height:1.14;letter-spacing:-.005em;max-width:30ch;color:var(--bone);margin-top:2px}
+h2 b{font-weight:600;font-style:italic;color:var(--accent);text-shadow:0 0 22px color-mix(in srgb,var(--accent) 35%,transparent)}
+.lede{font-family:var(--font-display);font-weight:300;font-size:14px;line-height:1.52;color:var(--bone-mut);max-width:78ch;margin-top:12px}
+.lede b{color:var(--accent);font-weight:500;font-style:italic}
+
+/* === SPINE (vertical slot list) === */
+.spine{position:relative;padding-left:30px;margin-top:14px;flex:1;min-height:0;overflow:hidden}
+.thread{position:absolute;left:9px;top:6px;bottom:6px;width:2px;
+  background:linear-gradient(var(--accent),color-mix(in srgb,var(--accent) 22%,transparent))}
+.slot{position:relative;padding:7px 0 8px}
+.slot + .slot{border-top:1px solid var(--line-soft)}
+.slot::before{content:"";position:absolute;left:-25px;top:13px;width:9px;height:9px;border-radius:50%;
+  background:var(--ink);border:2px solid var(--accent);box-shadow:0 0 0 3px var(--ink),0 0 10px color-mix(in srgb,var(--accent) 60%,transparent)}
+.slot .head{display:flex;align-items:baseline;gap:11px;flex-wrap:wrap}
+.slot .num{font-family:var(--font-mono);font-size:10px;color:var(--accent);letter-spacing:.05em}
+.slot .name{font-family:var(--font-display);font-weight:500;font-size:15px;color:var(--bone)}
+.slot .stag{margin-left:auto;font-family:var(--font-mono);font-size:8.5px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--bone-mut)}
+.slot p{font-size:12px;line-height:1.46;color:var(--bone-mut);margin-top:4px;max-width:108ch}
+.slot p em{font-style:italic;color:var(--accent);opacity:.95}
+
+/* === CONVERGE / OPEN NODES === */
+.converge{margin-top:10px;padding:9px 14px;border:1px solid var(--line);
+  border-left:2px solid var(--accent);background:var(--panel);
+  font-size:12px;line-height:1.42;color:var(--bone)}
+.converge b{font-family:var(--font-mono);font-size:8.5px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--accent);display:block;margin-bottom:3px;font-weight:500}
+.opennode{margin-top:10px;padding:10px 14px;border:1px dashed var(--line);
+  border-left:2px dashed var(--accent);font-size:12px;line-height:1.45;color:var(--bone-mut)}
+.opennode .ro{font-family:var(--font-mono);font-size:8px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--accent);display:block;margin-bottom:4px}
+.opennode b{color:var(--bone);font-weight:500}
+
+/* === SURFACE CARDS (3-up) === */
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:14px}
+.cards.two{grid-template-columns:1fr 1fr;gap:18px}
+.surfcard{position:relative;border:1px solid var(--line);background:var(--panel);
+  padding:14px 16px;display:flex;flex-direction:column;gap:8px;min-height:0}
+.surfcard::before{content:"";position:absolute;left:-1px;top:-1px;bottom:-1px;width:2px;background:var(--accent);opacity:.7}
+.surfcard h3{font-family:var(--font-display);font-weight:500;font-size:15px;color:var(--bone);letter-spacing:-.005em}
+.surfcard p, .surfcard li{font-size:12px;line-height:1.46;color:var(--bone-mut)}
+.surfcard ul{padding-left:16px;display:flex;flex-direction:column;gap:4px}
+.surfcard .tag{font-family:var(--font-mono);font-size:8.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
+
+/* === HAXIS (transform flow) === */
+.haxis{position:relative;margin:14px 0 4px;display:flex;align-items:stretch;gap:8px}
+.haxis::before{content:"";position:absolute;left:3%;right:3%;top:50%;height:2px;z-index:0;
+  background:linear-gradient(90deg,color-mix(in srgb,var(--accent) 30%,transparent),var(--accent),color-mix(in srgb,var(--accent) 30%,transparent))}
+.hnode{flex:1;position:relative;z-index:1;padding:16px 14px;background:var(--ink);border:1px solid var(--line);
+  display:flex;flex-direction:column;gap:5px;min-width:0}
+.hnode .pn{position:absolute;left:50%;top:-6px;width:10px;height:10px;border-radius:50%;background:var(--ink);
+  border:2px solid var(--accent);transform:translateX(-50%);box-shadow:0 0 10px var(--accent)}
+.hnode .pt{font-family:var(--font-display);font-weight:500;font-size:14px;color:var(--bone);line-height:1.15}
+.hnode .pd{font-family:var(--font-mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--bone-mut);line-height:1.35}
+.hnode.dark{background:linear-gradient(180deg,#11161f,#0a0d13);border-color:var(--accent)}
+.harr{flex:0 0 18px;display:flex;align-items:center;justify-content:center;color:var(--accent);
+  font-family:var(--font-mono);font-size:14px;text-shadow:0 0 10px var(--accent);z-index:1}
+
+/* === AXIS TABLE === */
+.axtab{width:100%;border-collapse:collapse;margin-top:12px;font-size:12px;table-layout:fixed}
+.axtab th,.axtab td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top;line-height:1.4;color:var(--bone-mut)}
+.axtab th{font-family:var(--font-mono);font-weight:500;font-size:9.5px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--accent);background:color-mix(in srgb,var(--accent) 5%,transparent)}
+.axtab td:first-child{color:var(--bone);font-family:var(--font-display);font-weight:500;font-size:13px;width:18%}
+.axtab .ok{color:var(--mint);font-weight:600}
+.axtab .warn{color:var(--exhale);font-weight:600}
+.axtab .danger{color:var(--rose);font-weight:600}
+
+/* === CLAIM (large pull-quote) === */
+.claim{margin-top:14px;padding:14px 18px;border-left:2px solid var(--accent);background:var(--panel);
+  font-family:var(--font-display);font-style:italic;font-weight:400;font-size:18px;line-height:1.32;color:var(--bone);max-width:80ch}
+.claim::before{content:"CLAIM // ";font-family:var(--font-mono);font-style:normal;font-size:9px;
+  letter-spacing:.18em;color:var(--accent);display:block;margin-bottom:3px}
+
+/* === CODE === */
+.code{margin-top:10px;padding:12px 16px;border:1px solid var(--line);border-left:2px solid var(--accent);
+  background:#06090f;color:var(--bone);font-family:var(--font-mono);font-size:11px;line-height:1.5;
+  white-space:pre-wrap;border-radius:0}
+.code .k{color:var(--accent)}
+
+/* === TAG ROW === */
+.tagrow{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.tagrow .tg{font-family:var(--font-mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;
+  padding:4px 8px;border:1px solid var(--line);color:var(--accent);background:var(--panel)}
+
+/* === BIND (assess split) === */
+.bind{display:grid;grid-template-columns:1.02fr 1fr;gap:24px;margin-top:14px;flex:1;min-height:0}
+.bind .colhead{font-family:var(--font-mono);font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--bone-mut);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+.bind .colhead span{color:var(--accent)}
+
+/* === STACK (layered model) === */
+.stack{display:flex;flex-direction:column;gap:8px;margin-top:14px}
+.layer{display:grid;grid-template-columns:2.2in 1fr;gap:18px;align-items:center;
+  border:1px solid var(--line);border-left:2px solid var(--accent);padding:11px 16px;background:var(--panel)}
+.layer .ln{font-family:var(--font-display);font-weight:500;font-size:16px;color:var(--bone)}
+.layer .ld{font-size:12px;line-height:1.45;color:var(--bone-mut)}
+
+/* === COVER === */
+.cover .frame{justify-content:space-between}
+.cover .kicker{font-family:var(--font-mono);font-size:11px;letter-spacing:.32em;text-transform:uppercase;color:var(--bone-mut);margin-bottom:20px}
+.cover h1{font-family:var(--font-display);font-weight:400;font-size:60px;line-height:1.04;letter-spacing:-.012em;max-width:18ch}
+.cover .sub{font-family:var(--font-display);font-style:italic;font-weight:300;font-size:21px;color:var(--bone-mut);margin-top:18px;max-width:48ch;line-height:1.32}
+.cover .sub b{color:var(--bone);font-style:italic;font-weight:400}
+.cover .lead{margin-top:auto}
+.breath{display:flex;gap:18px;margin-bottom:24px;font-family:var(--font-mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;flex-wrap:wrap}
+.breath .b{display:flex;align-items:center;gap:9px;color:var(--bone-mut)}
+.breath .b .o{width:9px;height:9px;border-radius:50%;background:var(--bone-dim)}
+.breath .b.observe .o{background:var(--inhale);box-shadow:0 0 10px var(--inhale)}
+.breath .b.gather .o{background:var(--bone);box-shadow:0 0 10px var(--bone)}
+.breath .b.transform .o{background:var(--pause);box-shadow:0 0 10px var(--pause)}
+.breath .b.assess .o{background:var(--exhale);box-shadow:0 0 10px var(--exhale)}
+.breath .b.crystal .o{background:var(--gold);box-shadow:0 0 10px var(--gold)}
+
+/* phase scopes */
+.ph-observe{--accent:var(--inhale)}
+.ph-gather{--accent:var(--bone)}
+.ph-transform{--accent:var(--pause)}
+.ph-assess{--accent:var(--exhale)}
+.ph-crystal{--accent:var(--gold)}
+.ph-surface{--accent:var(--bone)}
+
+/* === PRINT === */
+@page{size:13.333in 7.5in;margin:0}
+@media print{
+  html,body{background:#05070b;padding:0;margin:0;display:block}
+  body{gap:0}
+  .slide{margin:0;box-shadow:none;border-radius:0}
+}
+</style>
+</head>
+<body>
+
+<!-- ============= 01 COVER ============= -->
+<section class="slide cover ph-surface">
+  <div class="hud"><i class="tl"></i><i class="tr"></i><i class="bl"></i><i class="br"></i></div>
+  <div class="frame">
+    <div class="topbar"><span class="id">SPECIMEN // AGENT·ARCH·001</span><span class="seq">OBSERVABLE FRAME — INNER BODY BUILD</span></div>
+    <div class="lead" style="margin-top:60px">
+      <div class="kicker">A technical study of agent architecture</div>
+      <h1>From Agent Protocols<br>to Accountable<br><i style="color:var(--gold)">Inner Bodies</i></h1>
+      <div class="sub">A story for AI engineers: once agents can talk and use tools, the hard question moves <b>inward</b> — how does an agent gather context, transform it, assess the result, ask for depth, and write back with provenance.</div>
+    </div>
+    <div>
+      <div class="breath">
+        <div class="b observe"><span class="o"></span>Observe</div>
+        <div class="b gather"><span class="o"></span>Gather axes</div>
+        <div class="b transform"><span class="o"></span>Transform</div>
+        <div class="b assess"><span class="o"></span>Assess depth</div>
+        <div class="b crystal"><span class="o"></span>Crystallize</div>
+      </div>
+      <div class="tagrow" style="margin-bottom:16px">
+        <span class="tg">A2A</span><span class="tg">MCP</span><span class="tg">YAML capabilities</span>
+        <span class="tg">Ledger + graph</span><span class="tg">Assessment verbs</span>
+      </div>
+      <div class="botbar"><span>EACH PAGE DECLARES ITS AXIS · SLOTS · RELATIONS</span><span class="accent">22 / pages — style template</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============= 02 REASONING RHYTHM ============= -->
+<section class="slide ph-surface">
+  <div class="hud"><i class="tl"></i><i class="tr"></i><i class="bl"></i><i class="br"></i></div>
+  <div class="frame">
+    <div class="topbar"><span class="id">SPECIMEN // AGENT·ARCH·001</span><span class="seq"><b>02</b> / 22 — METHOD</span></div>
+    <div class="region">
+      <div class="gauge"><span class="ph">METHOD</span>
+        <div class="lv on"><span class="dot"></span>OBS</div>
+        <div class="lv on"><span class="dot"></span>GAT</div>
+        <div class="lv on"><span class="dot"></span>TRA</div>
+        <div class="lv on"><span class="dot"></span>ASS</div>
+        <div class="lv on"><span class="dot"></span>CRY</div>
+        <div class="rail"></div>
+        <div class="cyc">CYCLE · 0</div>
+      </div>
+      <div class="content">
+        <div class="ptag">The reasoning rhythm <span class="en">// the five-step lens</span></div>
+        <div class="axisdecl"><span class="ax">RHYTHM</span><span>— each topic is read through the same five-step lens</span></div>
+        <h2>Observe the facts, gather the axes, <b>transform</b> the view into an inner architecture, assess the result, and crystallize a practical claim.</h2>
+        <div class="spine" style="margin-top:18px">
+          <div class="thread"></div>
+          <div class="slot"><div class="head"><span class="num">01</span><span class="name">Observe</span><span class="stag">visible technical fact</span></div>
+            <p>Look at the visible technical fact that starts the question.</p></div>
+          <div class="slot"><div class="head"><span class="num">02</span><span class="name">Gather axes</span><span class="stag">dimensions explicit</span></div>
+            <p>Collect the dimensions that must stay explicit for engineering judgment.</p></div>
+          <div class="slot"><div class="head"><span class="num">03</span><span class="name">Transform</span><span class="stag">design move</span></div>
+            <p>Build a logical point where observations and constraints become a design move.</p></div>
+          <div class="slot"><div class="head"><span class="num">04</span><span class="name">Assess depth</span><span class="stag">recurse or commit</span></div>
+            <p>Inspect what the transformation produced and decide whether to recurse.</p></div>
+          <div class="slot"><div class="head"><span class="num">05</span><span class="name">Crystallize</span><span class="stag">practical rule</span></div>
+            <p>Extract the claim, invariant, or practical rule that follows.</p></div>
+        </div>
+        <div class="converge"><b>Ground</b>This is a presentation rhythm, but it also mirrors the proposed agentic unit of work: context selection, transformation, assessment, and accountable write.</div>
+        <div class="botbar"><span>METHOD ↔ AGENT'S UNIT OF WORK</span><span class="accent">↓ CYCLE 1 · BOUNDARY</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============= CYCLE 1 ============= -->
+
+<!-- 03 C1 observe -->
+<section class="slide ph-observe">
+  <div class="hud"><i class="tl"></i><i class="tr"></i><i class="bl"></i><i class="br"></i></div>
+  <div class="frame">
+    <div class="topbar"><span class="id">SPECIMEN // AGENT·ARCH·001</span><span class="seq"><b>03</b> / 22 — C1 · OBSERVE</span></div>
+    <div class="region">
+      <div class="gauge"><span class="ph">OBSERVE</span>
+        <div class="lv on"><span class="dot"></span>OBS</div>
+        <div class="lv"><span class="dot"></span>GAT</div>
+        <div class="lv"><span class="dot"></span>TRA</div>
+        <div class="lv"><span class="dot"></span>ASS</div>
+        <div class="lv"><span class="dot"></span>CRY</div>
+        <div class="rail"></div><div class="cyc">CYCLE · 1</div></div>
+      <div class="content">
+        <div class="ptag">Cycle 1 — observe <span class="en">// boundary appears</span></div>
+        <div class="axisdecl"><span class="ax">BOUNDARY</span><span>— protocols open a new aperture into agent systems</span></div>
+        <h2>Protocols create a new aperture into agent systems — discovery, skills, and tools become <b>visible at the seam</b>.</h2>
+        <p class="lede">A2A gives agents a way to discover each other and coordinate tasks. MCP gives agents a practical way to call tools and access external systems. Together, they make the boundary visible.</p>
+        <div class="cards">
+          <div class="surfcard"><span class="tag">A2A</span><h3>Agent-to-agent</h3><p>Remote agent discovery, skill declaration, messages, tasks, artifacts, and collaboration across agent boundaries.</p></div>
+          <div class="surfcard"><span class="tag">MCP</span><h3>Tools &amp; resources</h3><p>Tool, resource, and prompt exposure. The agent can reach into practical external systems.</p></div>
+          <div class="surfcard"><span class="tag">GAP</span><h3>The opening</h3><p>The protocols do not specify how the remote agent internally remains accountable while acting.</p></div>
+        </div>
+        <div class="claim">The boundary is now protocolized. The inner body is still an architectural choice.</div>
+        <div class="botbar"><span>SOURCE · A2A &amp; MCP OFFICIAL DOCUMENTATION</span><span class="accent">↓ GATHER AXES</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 04 C1 gather axes -->
+<section class="slide ph-gather">
+  <div class="hud"><i class="tl"></i><i class="tr"></i><i class="bl"></i><i class="br"></i></div>
+  <div class="frame">
+    <div class="topbar"><span class="id">SPECIMEN // AGENT·ARCH·001</span><span class="seq"><b>04</b> / 22 — C1 · GATHER AXES</span></div>
+    <div class="region">
+      <div class="gauge"><span class="ph">GATHER</span>
+        <div class="lv done"><span class="dot"></span>OBS</div>
+        <div class="lv on"><span class="dot"></span>GAT</div>
+        <div class="lv"><span class="dot"></span>TRA</div>
+        <div class="lv"><span class="dot"></span>ASS</div>
+        <div class="lv"><span class="dot"></span>CRY</div>
+        <div class="rail"></div><div class="cyc">CYCLE · 1</div></div>
+      <div class="content">
+        <div class="ptag">Cycle 1 — gather axes <span class="en">// outside vs inside</span></div>
+        <div class="axisdecl"><span class="ax">BOUNDARY ↔ INNER</span><span>— separate external protocol surfaces from internal accountability surfaces</span></div>
+        <h2>The boundary gives us <b>axes</b>, not a complete architecture.</h2>
+        <p class="lede">Before designing the inner system, separate the external protocol surfaces from the internal accountability surfaces.</p>
+        <table class="axtab">
+          <tr><th style="width:18%">Axis</th><th style="width:40%">Boundary manifestation</th><th>Internal question</th></tr>
+          <tr><td>Discovery</td><td>Agent Card, skills, endpoints, authentication.</td><td>What internal capabilities actually satisfy the advertised skill?</td></tr>
+          <tr><td>Delegation</td><td>Tasks, messages, artifacts, remote collaboration.</td><td>How does a task become a local center of transformation?</td></tr>
+          <tr><td>Tools</td><td>MCP tools with schemas and structured outputs.</td><td>How are tool calls selected, constrained, recorded, and assessed?</td></tr>
+          <tr><td>Opacity</td><td>The remote agent may remain implementation-private.</td><td>How can opacity coexist with internal audit and explainability?</td></tr>
+          <tr><td>Commitment</td><td>The remote side returns artifacts or status.</td><td>Who has authority to accept that artifact as a local fact?</td></tr>
+        </table>
+        <div class="botbar"><span>FIVE AXES · BOUNDARY MANIFESTATION ⟂ INTERNAL QUESTION</span><span class="accent">↓ TRANSFORM</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 05 C1 transform -->
+<section class="slide ph-transform">
+  <div class="hud"><i class="tl"></i><i class="tr"></i><i class="bl"></i><i class="br"></i></div>
+  <div class="frame">
+    <div class="topbar"><span class="id">SPECIMEN // AGENT·ARCH·001</span><span class="seq"><b>05</b> / 22 — C1 · TRANSFORM</span></div>
+    <div class="region">
+      <div class="gauge"><span class="ph">TRANSFORM</span>
+        <div class="lv done"><span class="dot"></span>OBS</div>
+        <div class="lv done"><span class="dot"></span>GAT</div>
+        <div class="lv on"><span class="dot"></span>TRA</div>
+        <div class="lv"><span class="dot"></span>ASS</div>
+        <div class="lv"><span class="dot"></span>CRY</div>
+        <div class="rail"></div><div class="cyc">CYCLE · 1</div></div>
+      <div class="content">
+        <div class="ptag">Cycle 1 — transform <span class="en">// task → center</span></div>
+        <div class="axisdecl"><span class="ax">LOCALIZATION</span><span>— a protocol task becomes a local transformation center</span></div>
+        <h2>The external task must become a <b>scoped center</b> that pulls context, invokes capabilities, assesses the result, and posts back to the substrate.</h2>
+        <div class="haxis" style="margin-top:24px">
+          <div class="hnode"><span class="pn"></span><div class="pt">A2A task</div><div class="pd">External request, remote context, artifact expectation</div></div>
+          <div class="harr">⟶</div>
+          <div class="hnode dark"><span class="pn"></span><div class="pt">Task center</div><div class="pd">Local shell where the work becomes inspectable</div></div>
+          <div class="harr">⟶</div>
+          <div class="hnode"><span class="pn"></span><div class="pt">Capabilities</div><div class="pd">YAML vessels, skills, MCP bindings, human routes</div></div>
+          <div class="harr">⟶</div>
+          <div class="hnode"><span class="pn"></span><div class="pt">Ledger entry</div><div class="pd">Result, credits, authority, residual</div></div>
+        </div>
+        <div class="claim">Protocol interoperability becomes useful when each incoming task is converted into an accountable internal event.</div>
+        <div class="botbar"><span>HORIZONTAL AXIS · EXTERIOR ⟶ INTERIOR</span><span class="accent">↓ CRYSTALLIZE</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 06 C1 crystallize -->
+<section class="slide ph-crystal">
+  <div class="hud"><i class="tl"></i><i class="tr"></i><i class="bl"></i><i class="br"></i></div>
+  <div class="frame">
+    <div class="topbar"><span class="id">SPECIMEN // AGENT·ARCH·001</span><span class="seq"><b>06</b> / 22 — C1 · CRYSTALLIZE</span></div>
+    <div class="region">
+      <div class="gauge"><span class="ph">CRYSTAL</span>
+        <div class="lv done"><span class="dot"></span>OBS</div>
+        <div class="lv done"><span class="dot"></span>GAT</div>
+        <div class="lv done"><span class="dot"></span>TRA</div>
+        <div class="lv done"><span class="dot"></span>ASS</div>
+        <div class="lv on"><span class="dot"></span>CRY</div>
+        <div class="rail"></div><div class="cyc">CYCLE · 1</div></div>
+      <div class="content">
+        <div class="ptag">Cycle 1 — crystallize <span class="en">// first claim</span></div>
+        <div class="axisdecl"><span class="ax">CLAIM I</span><span>— protocols connect agents; substrates make them accountable</span></div>
+        <h2>First claim: protocols connect agents, but <b>substrates</b> make them accountable.</h2>
+        <p class="lede">A2A and MCP solve crucial boundary problems. The next layer is the accountable body that makes each boundary event traceable, assessable, and governable.</p>
+        <div class="cards" style="margin-top:18px">
+          <div class="surfcard"><span class="tag">DO NOT</span><h3>Hide the body</h3><p>Capabilities should be declared and governed, not buried in a single orchestration prompt.</p></div>
+          <div class="surfcard"><span class="tag">DO NOT</span><h3>Trust the artifact alone</h3><p>A returned result must still be locally assessed before it becomes a committed fact.</p></div>
+          <div class="surfcard"><span class="tag">DO NOT</span><h3>Add audit later</h3><p>The write path is the moment to enforce provenance, authority, and residual capture.</p></div>
+        </div>
+        <div class="opennode"><span class="ro">Transition</span>Once the boundary event enters the body, we need a place where all transformations can meet without becoming <b>one mutable memory</b>.</div>
+        <div class="botbar"><span>CLAIM I · BOUNDARY → SUBSTRATE</span><span class="accent">↓ CYCLE 2 · SUBSTRATE</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============= CYCLE 2 ============= -->
+
+<!-- 07 C2 observe -->
+<section class="slide ph-observe">
+  <div class="hud"><i class="tl"></i><i class="tr"></i><i class="bl"></i><i class="br"></i></div>
+  <div class="frame">
+    <div class="topbar"><span class="id">SPECIMEN // AGENT·ARCH·001</span><span class="seq"><b>07</b> / 22 — C2 · OBSERVE</span></div>
+    <div class="region">
+      <div class="gauge"><span class="ph">OBSERVE</span>
+        <div class="lv on"><span class="dot"></span>OBS</div>
+        <div class="lv"><span class="dot"></span>GAT</div>
+        <div class="lv"><span class="dot"></span>TRA</div>
+        <div class="lv"><span class="dot"></span>ASS</div>
+        <div class="lv"><span class="dot"></span>CRY</div>
+        <div class="rail"></div><div class="cyc">CYCLE · 2</div></div>
+      <div class="content">
+        <div class="ptag">Cycle 2 — observe <span class="en">// memory drifts</span></div>
+        <div class="axisdecl"><span class="ax">SUBSTRATE</span><span>— inside the agent, "memory" is too vague to be the foundation</span></div>
+        <h2>Inside the agent, <b>"memory"</b> is too vague to be the foundation.</h2>
+        <p class="lede">Agents tend to accumulate vector stores, caches, scratchpads, task queues, graph tables, and audit logs. The more capable the system becomes, the more dangerous this drift gets.</p>
+        <div class="cards">
+          <div class="surfcard"><span class="tag">DRIFT</span><h3>State drifts</h3><p>The graph says one thing, the trace says another, and the task queue has its own truth.</p></div>
+          <div class="surfcard"><span class="tag">LEAK</span><h3>Context leaks</h3><p>Prompts silently carry data that was never made accountable as an input.</p></div>
+          <div class="surfcard"><span class="tag">LATE</span><h3>Audit arrives late</h3><p>Logging after action cannot prove why the action had authority to happen.</p></div>
+        </div>
+        <div class="claim">The foundation should not be memory. It should be a shared information substrate.</div>
+        <div class="botbar"><span>SYMPTOMS · DRIFT · LEAK · LATE AUDIT</span><span class="accent">↓ GATHER AXES</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 08 C2 gather -->
+<section class="slide ph-gather">
+  <div class="hud"><i class="tl"></i><i class="tr"></i><i class="bl"></i><i class="br"></i></div>
+  <div class="frame">
+    <div class="topbar"><span class="id">SPECIMEN // AGENT·ARCH·001</span><span class="seq"><b>08</b> / 22 — C2 · GATHER AXES</span></div>
+    <div class="region">
+      <div class="gauge"><span class="ph">GATHER</span>
+        <div class="lv done"><span class="dot"></span>OBS</div>
+        <div class="lv on"><span class="dot"></span>GAT</div>
+        <div class="lv"><span class="dot"></span>TRA</div>
+        <div class="lv"><span class="dot"></span>ASS</div>
+        <div class="lv"><span class="dot"></span>CRY</div>
+        <div class="rail"></div><div class="cyc">CYCLE · 2</div></div>
+      <div class="content">
+        <div class="ptag">Cycle 2 — gather axes <span class="en">// five faces, one truth</span></div>
+        <div class="axisdecl"><span class="ax">FACES OF SUBSTRATE</span><span>— each layer has a different job</span></div>
+        <h2>The substrate has several faces, but <b>one source of truth</b>.</h2>
+        <p class="lede">We pause to separate the layers that are often collapsed into "agent memory". Each one has a different job.</p>
+        <table class="axtab">
+          <tr><th>Axis</th><th>Role</th><th>Practical rule</th></tr>
+          <tr><td>Ledger</td><td>Append-only history of ingests, outputs, decisions, reversals, and failures.</td><td>Only entries are source of truth.</td></tr>
+          <tr><td>Graph</td><td>Current relation structure over claims, entities, questions, tools, and results.</td><td>Graph is a projection, not a second truth.</td></tr>
+          <tr><td>Projection</td><td>Scoped view for a model, tool, human, or remote agent.</td><td>Execution sees a local shell, not the entire world.</td></tr>
+          <tr><td>Resource ledger</td><td>Compute, latency, token cost, tool cost, and human minutes.</td><td>Cost constrains action but is not semantic truth.</td></tr>
+          <tr><td>Authority</td><td>Who or what can write which kind of entry.</td><td>Permission is part of the architecture, not an afterthought.</td></tr>
+        </table>
+        <div class="botbar"><span>LEDGER · GRAPH · PROJECTION · RESOURCE · AUTHORITY</span><span class="accent">↓ TRANSFORM</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 09 C2 transform -->
+<section class="slide ph-transform">
+  <div class="hud"><i class="tl"></i><i class="tr"></i><i class="bl"></i><i class="br"></i></div>
+  <div class="frame">
+    <div class="topbar"><span class="id">SPECIMEN // AGENT·ARCH·001</span><span class="seq"><b>09</b> / 22 — C2 · TRANSFORM</span></div>
+    <div class="region">
+      <div class="gauge"><span class="ph">TRANSFORM</span>
+        <div class="lv done"><span class="dot"></span>OBS</div>
+        <div class="lv done"><span class="dot"></span>GAT</div>
+        <div class="lv on"><span class="dot"></span>TRA</div>
+        <div class="lv"><span class="dot"></span>ASS</div>
+        <div class="lv"><span class="dot"></span>CRY</div>
+        <div class="rail"></div><div class="cyc">CYCLE · 2</div></div>
+      <div class="content">
+        <div class="ptag">Cycle 2 — transform <span class="en">// one ledger, many worlds</span></div>
+        <div class="axisdecl"><span class="ax">PROJECTION</span><span>— one ledger can generate many working worlds</span></div>
+        <h2>One ledger can generate <b>many working worlds</b>.</h2>
+        <p class="lede">The agent does not move raw reality into every step. It generates local projections from a durable substrate, then writes the transformed result back as a new entry.</p>
+        <div class="haxis">
+          <div class="hnode dark"><span class="pn"></span><div class="pt">Append-only ledger</div><div class="pd">Everything that happened, under whose authority</div></div>
+          <div class="harr">⟶</div>
+          <div class="hnode"><span class="pn"></span><div class="pt">Graph projection</div><div class="pd">Entities, relations, conflicts, residual questions</div></div>
+          <div class="harr">⟶</div>
+          <div class="hnode"><span class="pn"></span><div class="pt">Execution shell</div><div class="pd">Selected context for one transformation center</div></div>
+          <div class="harr">⟶</div>
+          <div class="hnode"><span class="pn"></span><div class="pt">Decision view</div><div class="pd">Full disclosure at commit points</div></div>
+        </div>
+<pre class="code"><span class="k">projection:</span>
+  center: task.current
+  include:
+    - SOURCED claims relevant to selector profile
+    - DERIVED graph links within depth 1
+    - GENERATED liabilities not yet resolved
+    - resource budget and authority constraints
+  exclude:
+    - unrelated private state
+    - uncredited outputs</pre>
+        <div class="botbar"><span>LEDGER · PROJECTION · SHELL · DECISION VIEW</span><span class="accent">↓ CRYSTALLIZE</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 10 C2 crystallize -->
+<section class="slide ph-crystal">
+  <div class="hud"><i class="tl"></i><i class="tr"></i><i class="bl"></i><i class="br"></i></div>
+  <div class="frame">
+    <div class="topbar"><span class="id">SPECIMEN // AGENT·ARCH·001</span><span class="seq"><b>10</b> / 22 — C2 · CRYSTALLIZE</span></div>
+    <div class="region">
+      <div class="gauge"><span class="ph">CRYSTAL</span>
+        <div class="lv done"><span class="dot"></span>OBS</div>
+        <div class="lv done"><span class="dot"></span>GAT</div>
+        <div class="lv done"><span class="dot"></span>TRA</div>
+        <div class="lv done"><span class="dot"></span>ASS</div>
+        <div class="lv on"><span class="dot"></span>CRY</div>
+        <div class="rail"></div><div class="cyc">CYCLE · 2</div></div>
+      <div class="content">
+        <div class="ptag">Cycle 2 — crystallize <span class="en">// second claim</span></div>
+        <div class="axisdecl"><span class="ax">CLAIM II</span><span>— traces are the data, not synchronized with it</span></div>
+        <h2>Second claim: do not synchronize traces with data. <b>Make traces the data</b>.</h2>
+        <p class="lede">If the ledger is primary, the graph, context, task state, and review surface become rebuildable views. This turns accountability from a feature into a structural property.</p>
+        <div class="cards" style="margin-top:18px">
+          <div class="surfcard"><span class="tag">INVARIANT</span><h3>No silent results</h3><p>No result exists without a ledger entry.</p></div>
+          <div class="surfcard"><span class="tag">INVARIANT</span><h3>No orphan edges</h3><p>No graph edge exists without an entry that explains how it appeared.</p></div>
+          <div class="surfcard"><span class="tag">INVARIANT</span><h3>No hidden liabilities</h3><p>No decision view hides generated liabilities at the point of commitment.</p></div>
+        </div>
+        <div class="opennode"><span class="ro">Ground</span>Event sourcing and CQRS provide the systems precedent: <b>immutable history first, read models second</b>.</div>
+        <div class="botbar"><span>CLAIM II · TRACE = SUBSTRATE</span><span class="accent">↓ CYCLE 3 · VESSELS</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============= CYCLE 3 ============= -->
+
+<!-- 11 C3 observe -->
+<section class="slide ph-observe">
+  <div class="hud"><i class="tl"></i><i class="tr"></i><i class="bl"></i><i class="br"></i></div>
+  <div class="frame">
+    <div class="topbar"><span class="id">SPECIMEN // AGENT·ARCH·001</span><span class="seq"><b>11</b> / 22 — C3 · OBSERVE</span></div>
+    <div class="region">
+      <div class="gauge"><span class="ph">OBSERVE</span>
+        <div class="lv on"><span class="dot"></span>OBS</div>
+        <div class="lv"><span class="dot"></span>GAT</div>
+        <div class="lv"><span class="dot"></span>TRA</div>
+        <div class="lv"><span class="dot"></span>ASS</div>
+        <div class="lv"><span class="dot"></span>CRY</div>
+        <div class="rail"></div><div class="cyc">CYCLE · 3</div></div>
+      <div class="content">
+        <div class="ptag">Cycle 3 — observe <span class="en">// the unit question</span></div>
+        <div class="axisdecl"><span class="ax">UNIT OF WORK</span><span>— a tool call is too small to be the architectural unit</span></div>
+        <h2>A tool call is too small to be the unit of <b>agent architecture</b>.</h2>
+        <p class="lede">The visible action may be a model call, function call, MCP tool, human review, or remote A2A task. But the meaningful architectural unit is larger.</p>
+        <div class="cards">
+          <div class="surfcard"><span class="tag">SELECT</span><h3>Selection</h3><p>What was allowed into the local shell?</p></div>
+          <div class="surfcard"><span class="tag">EXECUTE</span><h3>Execution</h3><p>Who or what performed the transformation?</p></div>
+          <div class="surfcard"><span class="tag">JUDGE</span><h3>Judgment</h3><p>Why did the system accept, retry, ask, escalate, or abort?</p></div>
+        </div>
+        <div class="claim">The unit is not "call the tool". The unit is "transform a scoped projection and decide what may happen next".</div>
+        <div class="botbar"><span>SELECTION · EXECUTION · JUDGMENT</span><span class="accent">↓ GATHER AXES</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 12 C3 gather -->
+<section class="slide ph-gather">
+  <div class="hud"><i class="tl"></i><i class="tr"></i><i class="bl"></i><i class="br"></i></div>
+  <div class="frame">
+    <div class="topbar"><span class="id">SPECIMEN // AGENT·ARCH·001</span><span class="seq"><b>12</b> / 22 — C3 · GATHER AXES</span></div>
+    <div class="region">
+      <div class="gauge"><span class="ph">GATHER</span>
+        <div class="lv done"><span class="dot"></span>OBS</div>
+        <div class="lv on"><span class="dot"></span>GAT</div>
+        <div class="lv"><span class="dot"></span>TRA</div>
+        <div class="lv"><span class="dot"></span>ASS</div>
+        <div class="lv"><span class="dot"></span>CRY</div>
+        <div class="rail"></div><div class="cyc">CYCLE · 3</div></div>
+      <div class="content">
+        <div class="ptag">Cycle 3 — gather axes <span class="en">// vessel contract</span></div>
+        <div class="axisdecl"><span class="ax">VESSEL</span><span>— each capability is a vessel with a common contract</span></div>
+        <h2>Each capability is a <b>vessel</b> with a common contract.</h2>
+        <p class="lede">A vessel is an isolated function that can enter the shared substrate, pull what it needs, work inside a shell, judge the result, and return an accountable entry.</p>
+        <table class="axtab">
+          <tr><th>Axis</th><th>Question</th><th>Design artifact</th></tr>
+          <tr><td>Resolve</td><td>How does the vessel pull inputs?</td><td>Selectors, cardinality, attribute ontology.</td></tr>
+          <tr><td>Act</td><td>What executor performs the transformation?</td><td>Code, LLM, MCP tool, human task, A2A agent.</td></tr>
+          <tr><td>Assess</td><td>What did the vessel learn about the result?</td><td>Verb table, residual, confidence, novelty, authority.</td></tr>
+          <tr><td>Post</td><td>How does the result return?</td><td>Balanced ledger entry, graph delta, write-off, question.</td></tr>
+        </table>
+        <div class="tagrow">
+          <span class="tg">static YAML</span><span class="tg">dynamic skills</span>
+          <span class="tg">MCP tools</span><span class="tg">human routes</span><span class="tg">remote agents</span>
+        </div>
+        <div class="botbar"><span>RESOLVE · ACT · ASSESS · POST</span><span class="accent">↓ TRANSFORM</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 13 C3 transform -->
+<section class="slide ph-transform">
+  <div class="hud"><i class="tl"></i><i class="tr"></i><i class="bl"></i><i class="br"></i></div>
+  <div class="frame">
+    <div class="topbar"><span class="id">SPECIMEN // AGENT·ARCH·001</span><span class="seq"><b>13</b> / 22 — C3 · TRANSFORM</span></div>
+    <div class="region">
+      <div class="gauge"><span class="ph">TRANSFORM</span>
+        <div class="lv done"><span class="dot"></span>OBS</div>
+        <div class="lv done"><span class="dot"></span>GAT</div>
+        <div class="lv on"><span class="dot"></span>TRA</div>
+        <div class="lv"><span class="dot"></span>ASS</div>
+        <div class="lv"><span class="dot"></span>CRY</div>
+        <div class="rail"></div><div class="cyc">CYCLE · 3</div></div>
+      <div class="content">
+        <div class="ptag">Cycle 3 — transform <span class="en">// the vessel loop</span></div>
+        <div class="axisdecl"><span class="ax">VESSEL LOOP</span><span>— execution and accountability become one shape</span></div>
+        <h2>The vessel loop makes execution and accountability <b>one shape</b>.</h2>
+        <p class="lede">Different executors can be swapped without changing the surrounding architecture, because the vessel contract stays stable.</p>
+        <div class="haxis">
+          <div class="hnode"><span class="pn"></span><div class="pt">Resolve</div><div class="pd">Pull typed inputs from the shared substrate</div></div>
+          <div class="harr">⟶</div>
+          <div class="hnode"><span class="pn"></span><div class="pt">Act</div><div class="pd">Run model, code, tool, human, or remote agent</div></div>
+          <div class="harr">⟶</div>
+          <div class="hnode"><span class="pn"></span><div class="pt">Assess</div><div class="pd">Measure residual, risk, novelty, authority, fit</div></div>
+          <div class="harr">⟶</div>
+          <div class="hnode dark"><span class="pn"></span><div class="pt">Post</div><div class="pd">Write result, credits, control verb, questions</div></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1.05fr .95fr;gap:18px;margin-top:8px">
+<pre class="code"><span class="k">capability:</span>
+  id: coverage_probe
+  resolve:
+    selector: sourced_policy_claims
+    cardinality: at-least-one
+  act:
+    executor: mcp_tool_or_model
+  assess:
+    verbs: [PROCEED, RETRY, ASK, ESCALATE, ABORT]
+  post:
+    requires_balanced_entry: true</pre>
+          <div class="converge" style="margin-top:10px"><b>Why this matters</b>The vessel can be static in YAML or dynamically attached as a skill. Either way, it must use the same entry, assessment, and authority rules.</div>
+        </div>
+        <div class="botbar"><span>RESOLVE ⟶ ACT ⟶ ASSESS ⟶ POST</span><span class="accent">↓ ASSESS DEPTH</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 14 C3 assess -->
+<section class="slide ph-assess">
+  <div class="hud"><i class="tl"></i><i class="tr"></i><i class="bl"></i><i class="br"></i></div>
+  <div class="frame">
+    <div class="topbar"><span class="id">SPECIMEN // AGENT·ARCH·001</span><span class="seq"><b>14</b> / 22 — C3 · ASSESS</span></div>
+    <div class="region">
+      <div class="gauge"><span class="ph">ASSESS</span>
+        <div class="lv done"><span class="dot"></span>OBS</div>
+        <div class="lv done"><span class="dot"></span>GAT</div>
+        <div class="lv done"><span class="dot"></span>TRA</div>
+        <div class="lv on"><span class="dot"></span>ASS</div>
+        <div class="lv"><span class="dot"></span>CRY</div>
+        <div class="rail"></div><div class="cyc">CYCLE · 3</div></div>
+      <div class="content">
+        <div class="ptag">Cycle 3 — assess depth <span class="en">// verb table</span></div>
+        <div class="axisdecl"><span class="ax">VERB TABLE</span><span>— assessment is where the system decides to go deeper</span></div>
+        <h2>Assessment is where the system decides whether to <b>go deeper</b>.</h2>
+        <p class="lede">The result is inspected from inside the current logical point: what was intended, what was selected, what was produced, what remains unresolved, and what has authority to move forward.</p>
+        <table class="axtab">
+          <tr><th>Verb</th><th>When it appears</th><th>Rule</th></tr>
+          <tr><td><span class="ok">PROCEED</span></td><td>The result is sufficient for the current commitment height.</td><td>Log as an explicit decision.</td></tr>
+          <tr><td><span class="warn">RETRY</span></td><td>The same vessel may improve the result.</td><td>Require measurable residual reduction.</td></tr>
+          <tr><td><span class="warn">ASK</span></td><td>The vessel finds a deficit that requires another projection.</td><td>Write the question as a first-class entry.</td></tr>
+          <tr><td><span class="warn">ESCALATE</span></td><td>Novelty, irreversibility, or missing authority exceeds policy.</td><td>Route to human or higher authority.</td></tr>
+          <tr><td><span class="danger">ABORT</span></td><td>The state is unknown, unsafe, or outside contract.</td><td>Fail closed.</td></tr>
+        </table>
+        <div class="botbar"><span>PROCEED · RETRY · ASK · ESCALATE · ABORT</span><span class="accent">↓ CRYSTALLIZE</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 15 C3 crystallize -->
+<section class="slide ph-crystal">
+  <div class="hud"><i class="tl"></i><i class="tr"></i><i class="bl"></i><i class="br"></i></div>
+  <div class="frame">
+    <div class="topbar"><span class="id">SPECIMEN // AGENT·ARCH·001</span><span class="seq"><b>15</b> / 22 — C3 · CRYSTALLIZE</span></div>
+    <div class="region">
+      <div class="gauge"><span class="ph">CRYSTAL</span>
+        <div class="lv done"><span class="dot"></span>OBS</div>
+        <div class="lv done"><span class="dot"></span>GAT</div>
+        <div class="lv done"><span class="dot"></span>TRA</div>
+        <div class="lv done"><span class="dot"></span>ASS</div>
+        <div class="lv on"><span class="dot"></span>CRY</div>
+        <div class="rail"></div><div class="cyc">CYCLE · 3</div></div>
+      <div class="content">
+        <div class="ptag">Cycle 3 — crystallize <span class="en">// third claim</span></div>
+        <div class="axisdecl"><span class="ax">CLAIM III</span><span>— capabilities are vessels, not free-floating tools</span></div>
+        <h2>Third claim: capabilities are <b>vessels</b>, not free-floating tools.</h2>
+        <p class="lede">A vessel has hands, but it also has a contract. It can use MCP, call a model, ask a human, or delegate through A2A. What matters is how it enters and leaves the shared substrate.</p>
+        <div class="cards" style="margin-top:18px">
+          <div class="surfcard"><span class="tag">INPUT</span><h3>Input discipline</h3><p>Selectors define what the vessel may see.</p></div>
+          <div class="surfcard"><span class="tag">EXEC</span><h3>Execution discipline</h3><p>Executors are interchangeable only behind explicit schemas.</p></div>
+          <div class="surfcard"><span class="tag">OUTPUT</span><h3>Output discipline</h3><p>Every output returns through a balanced write.</p></div>
+        </div>
+        <div class="opennode"><span class="ro">Transition</span>Once assessment can produce questions, the architecture stops being a fixed workflow and becomes a <b>bounded route-growing system</b>.</div>
+        <div class="botbar"><span>CLAIM III · CAPABILITY = VESSEL</span><span class="accent">↓ CYCLE 4 · ROUTES</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============= CYCLE 4 ============= -->
+
+<!-- 16 C4 observe -->
+<section class="slide ph-observe">
+  <div class="hud"><i class="tl"></i><i class="tr"></i><i class="bl"></i><i class="br"></i></div>
+  <div class="frame">
+    <div class="topbar"><span class="id">SPECIMEN // AGENT·ARCH·001</span><span class="seq"><b>16</b> / 22 — C4 · OBSERVE</span></div>
+    <div class="region">
+      <div class="gauge"><span class="ph">OBSERVE</span>
+        <div class="lv on"><span class="dot"></span>OBS</div>
+        <div class="lv"><span class="dot"></span>GAT</div>
+        <div class="lv"><span class="dot"></span>TRA</div>
+        <div class="lv"><span class="dot"></span>ASS</div>
+        <div class="lv"><span class="dot"></span>CRY</div>
+        <div class="rail"></div><div class="cyc">CYCLE · 4</div></div>
+      <div class="content">
+        <div class="ptag">Cycle 4 — observe <span class="en">// deficits as openings</span></div>
+        <div class="axisdecl"><span class="ax">DEFICIT</span><span>— deficits create routes the original workflow did not draw</span></div>
+        <h2>Deficits create routes the original workflow <b>did not draw</b>.</h2>
+        <p class="lede">A capable agent will encounter missing sources, conflicting evidence, insufficient authority, novelty, and unclear user intent. The question is not whether this happens. The question is how the system handles it.</p>
+        <div class="cards">
+          <div class="surfcard"><span class="tag">STATIC</span><h3>Static workflows stop</h3><p>If the path was not drawn, the system either fails or improvises invisibly.</p></div>
+          <div class="surfcard"><span class="tag">UNBOUND</span><h3>Unbounded agents drift</h3><p>If every deficit becomes unrestricted exploration, the system loses control.</p></div>
+          <div class="surfcard"><span class="tag">BOUNDED</span><h3>Bounded agents ask</h3><p>The deficit becomes a logged question routed through explicit controls.</p></div>
+        </div>
+        <div class="claim">A question is not merely clarification. It is a controlled way to open a new route.</div>
+        <div class="botbar"><span>STATIC ⟂ UNBOUNDED ⟂ BOUNDED</span><span class="accent">↓ GATHER AXES</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 17 C4 gather -->
+<section class="slide ph-gather">
+  <div class="hud"><i class="tl"></i><i class="tr"></i><i class="bl"></i><i class="br"></i></div>
+  <div class="frame">
+    <div class="topbar"><span class="id">SPECIMEN // AGENT·ARCH·001</span><span class="seq"><b>17</b> / 22 — C4 · GATHER AXES</span></div>
+    <div class="region">
+      <div class="gauge"><span class="ph">GATHER</span>
+        <div class="lv done"><span class="dot"></span>OBS</div>
+        <div class="lv on"><span class="dot"></span>GAT</div>
+        <div class="lv"><span class="dot"></span>TRA</div>
+        <div class="lv"><span class="dot"></span>ASS</div>
+        <div class="lv"><span class="dot"></span>CRY</div>
+        <div class="rail"></div><div class="cyc">CYCLE · 4</div></div>
+      <div class="content">
+        <div class="ptag">Cycle 4 — gather axes <span class="en">// routes &amp; limits</span></div>
+        <div class="axisdecl"><span class="ax">ROUTING</span><span>— questions need routing rules and growth limits</span></div>
+        <h2>Questions need <b>routing rules</b> and growth limits.</h2>
+        <p class="lede">The same mechanism that allows the system to go deeper must also prevent uncontrolled recursion.</p>
+        <table class="axtab">
+          <tr><th>Axis</th><th>Route</th><th>Boundary</th></tr>
+          <tr><td>Same vessel</td><td>Retry with a narrower or broader selector profile.</td><td>Progress measure must decrease residual.</td></tr>
+          <tr><td>Peer vessel</td><td>Send the question to another capability inside the same body.</td><td>Schema and authority must match.</td></tr>
+          <tr><td>Remote agent</td><td>Delegate through A2A when another agent owns the capability.</td><td>Returned artifact still needs local assessment.</td></tr>
+          <tr><td>MCP tool</td><td>Use a tool when the deficit is operational or data-access related.</td><td>Arguments and outputs must be recorded.</td></tr>
+          <tr><td>Human</td><td>Escalate when novelty or irreversibility exceeds policy.</td><td>Decision view must be full-disclosure.</td></tr>
+        </table>
+        <div class="botbar"><span>SAME · PEER · REMOTE · MCP · HUMAN</span><span class="accent">↓ TRANSFORM</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 18 C4 transform -->
+<section class="slide ph-transform">
+  <div class="hud"><i class="tl"></i><i class="tr"></i><i class="bl"></i><i class="br"></i></div>
+  <div class="frame">
+    <div class="topbar"><span class="id">SPECIMEN // AGENT·ARCH·001</span><span class="seq"><b>18</b> / 22 — C4 · TRANSFORM</span></div>
+    <div class="region">
+      <div class="gauge"><span class="ph">TRANSFORM</span>
+        <div class="lv done"><span class="dot"></span>OBS</div>
+        <div class="lv done"><span class="dot"></span>GAT</div>
+        <div class="lv on"><span class="dot"></span>TRA</div>
+        <div class="lv"><span class="dot"></span>ASS</div>
+        <div class="lv"><span class="dot"></span>CRY</div>
+        <div class="rail"></div><div class="cyc">CYCLE · 4</div></div>
+      <div class="content">
+        <div class="ptag">Cycle 4 — transform <span class="en">// the deficit tunnel</span></div>
+        <div class="axisdecl"><span class="ax">EMERGENT ROUTE</span><span>— a deficit becomes a tunnel through the substrate</span></div>
+        <h2>A deficit becomes a <b>tunnel</b> through the substrate.</h2>
+        <p class="lede">The system can grow a path through internal vessels, external agents, tools, and human judgment. The route is emergent, but the movement is bounded.</p>
+        <div style="display:grid;grid-template-columns:1.05fr 1.45fr;gap:18px;margin-top:14px">
+          <div class="hnode dark" style="padding:16px 18px"><span class="pn" style="left:-5px;top:50%;transform:translateY(-50%)"></span>
+            <div class="pt" style="font-size:16px">Logged question</div>
+            <div class="pd" style="margin-top:6px">Created by assess when the current shell cannot honestly commit the result.</div>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
+            <div class="surfcard"><span class="tag">M1</span><h3>Re-enter</h3><p>Same vessel, changed selector profile, measurable progress.</p></div>
+            <div class="surfcard"><span class="tag">M2</span><h3>Branch</h3><p>Several vessels inspect the deficit from different projections.</p></div>
+            <div class="surfcard"><span class="tag">M3</span><h3>Delegate</h3><p>A2A remote agent or human authority receives the deficit.</p></div>
+          </div>
+        </div>
+<pre class="code"><span class="k">question_entry:</span>
+  created_by: assess.coverage_probe
+  deficit: "source evidence insufficient for commit"
+  route_candidates:
+    - retry:same_vessel.selector_broadened
+    - peer:source_lookup_vessel
+    - external:a2a_research_agent
+  stop_condition: residual_decreases_or_escalate</pre>
+        <div class="botbar"><span>QUESTION ⟶ RE-ENTER / BRANCH / DELEGATE</span><span class="accent">↓ ASSESS &amp; CRYSTALLIZE</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 19 C4 assess + crystallize -->
+<section class="slide ph-crystal">
+  <div class="hud"><i class="tl"></i><i class="tr"></i><i class="bl"></i><i class="br"></i></div>
+  <div class="frame">
+    <div class="topbar"><span class="id">SPECIMEN // AGENT·ARCH·001</span><span class="seq"><b>19</b> / 22 — C4 · ASSESS &amp; CRYSTALLIZE</span></div>
+    <div class="region">
+      <div class="gauge"><span class="ph">CRYSTAL</span>
+        <div class="lv done"><span class="dot"></span>OBS</div>
+        <div class="lv done"><span class="dot"></span>GAT</div>
+        <div class="lv done"><span class="dot"></span>TRA</div>
+        <div class="lv on"><span class="dot"></span>ASS</div>
+        <div class="lv on"><span class="dot"></span>CRY</div>
+        <div class="rail"></div><div class="cyc">CYCLE · 4</div></div>
+      <div class="content">
+        <div class="ptag">Cycle 4 — assess &amp; crystallize <span class="en">// bounded emergence</span></div>
+        <div class="axisdecl"><span class="ax">CLAIM IV</span><span>— emergence is useful only when it is bounded</span></div>
+        <h2>Fourth claim: emergence is useful only when it is <b>bounded</b>.</h2>
+        <p class="lede">The system should be able to discover a route through a problem, but every route must remain inspectable, reversible where possible, and constrained by authority.</p>
+        <div class="cards two">
+          <div class="surfcard"><span class="tag">MAY GROW</span><h3>What may grow</h3>
+            <ul>
+              <li>New questions.</li>
+              <li>New routes through capabilities.</li>
+              <li>New external delegations.</li>
+              <li>New graph links and projections.</li>
+              <li>New dynamically attached skills.</li>
+            </ul>
+          </div>
+          <div class="surfcard"><span class="tag">MUST HOLD</span><h3>What must not drift</h3>
+            <ul>
+              <li>Selector contracts.</li>
+              <li>Verb table and fail-closed defaults.</li>
+              <li>Authority model.</li>
+              <li>Resource budget.</li>
+              <li>Balanced write rules.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="opennode"><span class="ro">Ground</span>This is a <b>controlled dynamic graph</b>: back-edges are allowed only when they reduce a declared residual or escalate.</div>
+        <div class="botbar"><span>CLAIM IV · BOUNDED EMERGENCE</span><span class="accent">↓ FINAL · MODEL IN ONE VIEW</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============= FINAL ============= -->
+
+<!-- 20 model in one view -->
+<section class="slide ph-surface">
+  <div class="hud"><i class="tl"></i><i class="tr"></i><i class="bl"></i><i class="br"></i></div>
+  <div class="frame">
+    <div class="topbar"><span class="id">SPECIMEN // AGENT·ARCH·001</span><span class="seq"><b>20</b> / 22 — FINAL · MODEL</span></div>
+    <div class="region">
+      <div class="gauge"><span class="ph">SYNTHESIS</span>
+        <div class="lv on"><span class="dot"></span>OBS</div>
+        <div class="lv on"><span class="dot"></span>GAT</div>
+        <div class="lv on"><span class="dot"></span>TRA</div>
+        <div class="lv on"><span class="dot"></span>ASS</div>
+        <div class="lv on"><span class="dot"></span>CRY</div>
+        <div class="rail"></div><div class="cyc">CYCLES · 1–4</div></div>
+      <div class="content">
+        <div class="ptag">Final cycle — crystallize <span class="en">// the practical model</span></div>
+        <div class="axisdecl"><span class="ax">MODEL</span><span>— the accountable agent in one stacked view</span></div>
+        <h2>The practical model in <b>one view</b>.</h2>
+        <p class="lede">An accountable agent is a protocol-connected body of vessels working over a shared substrate, where each transformation can ask, retry, escalate, or commit with provenance.</p>
+        <div class="stack">
+          <div class="layer"><div class="ln">Boundary</div><div class="ld">A2A for agent-to-agent tasks. MCP for practical tools and resources.</div></div>
+          <div class="layer"><div class="ln">Body</div><div class="ld">Declarative vessels: YAML capabilities, skills, schemas, policies, executor bindings.</div></div>
+          <div class="layer"><div class="ln">Substrate</div><div class="ld">Append-only ledger, graph projection, working views, resource ledger, decision surfaces.</div></div>
+          <div class="layer"><div class="ln">Motion</div><div class="ld">Resolve context, act through an executor, assess depth, post accountable entries.</div></div>
+          <div class="layer"><div class="ln">Growth</div><div class="ld">Questions open new routes while selector, authority, budget, and write rules bound the system.</div></div>
+        </div>
+        <div class="botbar"><span>FIVE LAYERS · ONE BODY</span><span class="accent">↓ FIVE CLAIMS</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 21 five claims -->
+<section class="slide ph-crystal">
+  <div class="hud"><i class="tl"></i><i class="tr"></i><i class="bl"></i><i class="br"></i></div>
+  <div class="frame">
+    <div class="topbar"><span class="id">SPECIMEN // AGENT·ARCH·001</span><span class="seq"><b>21</b> / 22 — CLAIMS</span></div>
+    <div class="region">
+      <div class="gauge"><span class="ph">CLAIMS</span>
+        <div class="lv on"><span class="dot"></span>OBS</div>
+        <div class="lv on"><span class="dot"></span>GAT</div>
+        <div class="lv on"><span class="dot"></span>TRA</div>
+        <div class="lv on"><span class="dot"></span>ASS</div>
+        <div class="lv on"><span class="dot"></span>CRY</div>
+        <div class="rail"></div><div class="cyc">SUMMARY</div></div>
+      <div class="content">
+        <div class="ptag">Claims to take away <span class="en">// for AI engineering teams</span></div>
+        <div class="axisdecl"><span class="ax">FIVE CLAIMS</span><span>— conclusions that crystallize from the cycles</span></div>
+        <h2>Five practical claims for <b>AI engineering teams</b>.</h2>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:14px">
+          <div class="surfcard"><span class="tag">CLAIM I</span><h3>Protocols are boundaries</h3><p>A2A and MCP are necessary, but they do not define the internal body of the agent.</p></div>
+          <div class="surfcard"><span class="tag">CLAIM II</span><h3>Trace should be substrate</h3><p>Do not synchronize logs with data. Build projections from an append-only entry history.</p></div>
+          <div class="surfcard"><span class="tag">CLAIM III</span><h3>Capabilities are vessels</h3><p>Every capability should resolve, act, assess, and post through one contract.</p></div>
+          <div class="surfcard"><span class="tag">CLAIM IV</span><h3>Questions are architecture</h3><p>A question is a first-class way to route deficits, not a hidden model thought.</p></div>
+          <div class="surfcard"><span class="tag">CLAIM V</span><h3>Generated output is liability</h3><p>A model result is useful, but it is not a committed fact until sourced, validated, or decided.</p></div>
+          <div class="surfcard" style="background:linear-gradient(180deg,color-mix(in srgb,var(--accent) 10%,transparent),transparent)"><span class="tag">RULE</span><h3>Operating rule</h3><p>Let the system discover a path while every move remains bounded, inspectable, and accountable.</p></div>
+        </div>
+        <div class="botbar"><span>FIVE CLAIMS · ONE OPERATING RULE</span><span class="accent">↓ GROUNDING NOTES</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 22 grounding notes + references -->
+<section class="slide ph-surface">
+  <div class="hud"><i class="tl"></i><i class="tr"></i><i class="bl"></i><i class="br"></i></div>
+  <div class="frame">
+    <div class="topbar"><span class="id">SPECIMEN // AGENT·ARCH·001</span><span class="seq"><b>22</b> / 22 — GROUNDING</span></div>
+    <div class="region">
+      <div class="gauge"><span class="ph">GROUND</span>
+        <div class="lv on"><span class="dot"></span>OBS</div>
+        <div class="lv on"><span class="dot"></span>GAT</div>
+        <div class="lv on"><span class="dot"></span>TRA</div>
+        <div class="lv on"><span class="dot"></span>ASS</div>
+        <div class="lv on"><span class="dot"></span>CRY</div>
+        <div class="rail"></div><div class="cyc">ANCHORS</div></div>
+      <div class="content">
+        <div class="ptag">Grounding notes <span class="en">// technical anchors behind the lens</span></div>
+        <div class="axisdecl"><span class="ax">ANCHORS</span><span>— algebra · topology · structural information systems</span></div>
+        <h2>Technical <b>anchors</b> behind the lens.</h2>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:14px">
+          <div class="surfcard"><span class="tag">I · ALGEBRA</span><h3>Algebra</h3>
+            <p><b style="color:var(--bone)">Typed operators.</b> A vessel behaves like an operator from selected inputs to posted outputs.</p>
+            <p><b style="color:var(--bone)">Composition.</b> Operators compose only when schemas, authority, and side effects are explicit.</p>
+            <p><b style="color:var(--bone)">Differential.</b> Assess compares intended, selected, produced, authorized, and residual state.</p>
+            <p><b style="color:var(--bone)">Liability.</b> Generated content is a pending obligation, not a conserved fact.</p>
+          </div>
+          <div class="surfcard"><span class="tag">II · TOPOLOGY</span><h3>Topology</h3>
+            <p><b style="color:var(--bone)">Local charts.</b> Each execution shell is a local projection over the shared substrate.</p>
+            <p><b style="color:var(--bone)">Neighborhoods.</b> Selectors define which part of the graph is visible from the current center.</p>
+            <p><b style="color:var(--bone)">Edges.</b> Questions create new routes in the work graph.</p>
+            <p><b style="color:var(--bone)">Back-edges.</b> Retry is allowed only with a progress measure or escalation.</p>
+          </div>
+          <div class="surfcard"><span class="tag">III · SYSTEMS</span><h3>Structural information systems</h3>
+            <p><b style="color:var(--bone)">Event sourcing.</b> Immutable entries first, read models second.</p>
+            <p><b style="color:var(--bone)">CQRS.</b> Write model and read projections serve different purposes.</p>
+            <p><b style="color:var(--bone)">Blackboard systems.</b> Capabilities coordinate through shared structured memory.</p>
+            <p><b style="color:var(--bone)">Data provenance.</b> Derivation edges make lineage inspectable.</p>
+          </div>
+        </div>
+        <div class="opennode" style="margin-top:14px"><span class="ro">References</span>
+          <b>Github:</b> <a href="https://github.com/vestacore/semantic-field" style="color:var(--accent)">vestacore / semantic-field</a> &nbsp;·&nbsp;
+          <b>Protocols:</b>
+          <a href="https://a2a-protocol.org/latest/" style="color:var(--accent)">A2A docs</a>,
+          <a href="https://a2a-protocol.org/latest/topics/a2a-and-mcp/" style="color:var(--accent)">A2A &amp; MCP</a>,
+          <a href="https://a2a-protocol.org/latest/topics/agent-discovery/" style="color:var(--accent)">A2A discovery</a>,
+          <a href="https://modelcontextprotocol.io/specification/2025-11-25" style="color:var(--accent)">MCP spec</a>,
+          <a href="https://modelcontextprotocol.io/specification/2025-11-25/server/tools" style="color:var(--accent)">MCP tools</a>.
+        </div>
+        <div class="botbar"><span>END OF SPECIMEN · AGENT·ARCH·001</span><span class="accent">CoAgnes · style template</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</body>
+</html>
