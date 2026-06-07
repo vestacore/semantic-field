@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Accountable Agents — a research observation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f6f3ec;
+    --ink:#1c1a16;
+    --ink-soft:#403b33;
+    --ink-faint:#6f6a5f;
+    --accent:#1e3d61;
+    --accent-soft:#3a5f86;
+    --open:#92632a;
+    --rule:#ddd6c7;
+    --rule-strong:#bcb4a2;
+    --mono:"IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+    --serif:"Newsreader", Georgia, "Times New Roman", serif;
+    --display:"Fraunces", Georgia, serif;
+  }
+
+  *{ box-sizing:border-box; }
+  html{ -webkit-text-size-adjust:100%; }
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--serif);
+    font-size:18px;
+    line-height:1.62;
+    font-weight:400;
+    text-rendering:optimizeLegibility;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .wrap{
+    max-width:43rem;
+    margin:0 auto;
+    padding:5rem 1.6rem 6rem;
+  }
+
+  /* ---- load motion (screen only) ---- */
+  @media (prefers-reduced-motion:no-preference){
+    .anim > *{ opacity:0; transform:translateY(8px); animation:rise .7s cubic-bezier(.2,.7,.2,1) forwards; }
+    .anim > *:nth-child(1){ animation-delay:.02s }
+    .anim > *:nth-child(2){ animation-delay:.08s }
+    .anim > *:nth-child(3){ animation-delay:.14s }
+    .anim > *:nth-child(4){ animation-delay:.20s }
+    .anim > *:nth-child(n+5){ animation-delay:.26s }
+    @keyframes rise{ to{ opacity:1; transform:none } }
+  }
+
+  /* ---- masthead ---- */
+  .eyebrow{
+    font-family:var(--mono);
+    font-size:.66rem;
+    letter-spacing:.2em;
+    text-transform:uppercase;
+    color:var(--accent-soft);
+    margin:0 0 1.4rem;
+  }
+  h1.title{
+    font-family:var(--display);
+    font-optical-sizing:auto;
+    font-weight:600;
+    font-size:clamp(2.7rem, 7vw, 4.1rem);
+    line-height:.98;
+    letter-spacing:-.015em;
+    margin:0;
+    color:var(--ink);
+  }
+  .subtitle{
+    font-family:var(--serif);
+    font-style:italic;
+    font-weight:400;
+    font-size:1.28rem;
+    color:var(--ink-soft);
+    margin:1.1rem 0 0;
+    max-width:34rem;
+  }
+  .meta{
+    font-family:var(--mono);
+    font-size:.7rem;
+    letter-spacing:.06em;
+    color:var(--ink-faint);
+    margin:1.7rem 0 0;
+    display:flex;
+    flex-wrap:wrap;
+    gap:.4rem 1.2rem;
+  }
+  .hr{
+    border:0;
+    border-top:1px solid var(--rule-strong);
+    margin:2.6rem 0;
+  }
+  .hr.light{ border-top-color:var(--rule); }
+
+  /* ---- abstract / framing ---- */
+  .abstract{
+    font-size:1.07rem;
+    color:var(--ink-soft);
+    border-top:1px solid var(--rule);
+    border-bottom:1px solid var(--rule);
+    padding:1.6rem 0;
+    margin:0 0 2.4rem;
+  }
+  .abstract p{ margin:0 0 1rem; }
+  .abstract p:last-child{ margin-bottom:0; }
+  .abstract strong{ color:var(--ink); font-weight:600; }
+
+  /* ---- section heads ---- */
+  .kicker{
+    font-family:var(--mono);
+    font-size:.68rem;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:var(--accent-soft);
+    margin:0;
+  }
+  h2.head{
+    font-family:var(--display);
+    font-weight:500;
+    font-size:1.62rem;
+    line-height:1.12;
+    letter-spacing:-.01em;
+    margin:.35rem 0 1.3rem;
+    color:var(--ink);
+  }
+  section{ margin:3.2rem 0 0; }
+  section.lead-in{ margin-top:2.2rem; }
+
+  p{ margin:0 0 1.15rem; }
+  p:last-child{ margin-bottom:0; }
+
+  /* ---- theses ---- */
+  .thesis{ margin:0 0 1.5rem; }
+  .tid{
+    font-family:var(--mono);
+    font-weight:600;
+    font-size:.78em;
+    color:var(--accent);
+    letter-spacing:.02em;
+    margin-right:.45em;
+    white-space:nowrap;
+  }
+  .claim{ font-weight:600; color:var(--ink); }
+
+  /* ---- open points ---- */
+  .open{
+    border-left:2px solid var(--open);
+    padding:.15rem 0 .15rem 1.1rem;
+    margin:1.1rem 0 1.6rem;
+  }
+  .open .otag{
+    font-family:var(--mono);
+    font-size:.62rem;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:var(--open);
+    display:block;
+    margin-bottom:.35rem;
+  }
+  .open p{ font-size:.97rem; color:var(--ink-soft); margin:0; }
+
+  /* ---- plugin surface ---- */
+  dl.plugins{ margin:1.2rem 0 0; }
+  dl.plugins div{
+    display:grid;
+    grid-template-columns:13rem 1fr;
+    gap:.2rem 1.4rem;
+    padding:.85rem 0;
+    border-top:1px solid var(--rule);
+  }
+  dl.plugins div:last-child{ border-bottom:1px solid var(--rule); }
+  dl.plugins dt{
+    font-family:var(--mono);
+    font-weight:600;
+    font-size:.82rem;
+    color:var(--accent);
+    line-height:1.45;
+    letter-spacing:.01em;
+  }
+  dl.plugins dd{ margin:0; font-size:.99rem; color:var(--ink-soft); }
+  @media (max-width:34rem){
+    dl.plugins div{ grid-template-columns:1fr; gap:.3rem; }
+  }
+
+  /* ---- referents ---- */
+  ul.refs{ list-style:none; margin:1.1rem 0 0; padding:0; }
+  ul.refs li{
+    padding:.6rem 0;
+    border-top:1px solid var(--rule);
+    font-size:.99rem;
+    color:var(--ink-soft);
+  }
+  ul.refs li:last-child{ border-bottom:1px solid var(--rule); }
+  ul.refs .rname{
+    font-family:var(--serif);
+    font-weight:600;
+    font-style:italic;
+    color:var(--ink);
+  }
+
+  /* ---- closing + appendix ---- */
+  .closing{ font-size:1.05rem; color:var(--ink-soft); }
+  .closing strong{ color:var(--ink); font-weight:600; }
+  .appendix{
+    margin-top:3rem;
+    padding-top:1.6rem;
+    border-top:1px solid var(--rule);
+    font-size:.9rem;
+    color:var(--ink-faint);
+  }
+  .appendix .kicker{ color:var(--ink-faint); }
+  .appendix .map{ font-family:var(--mono); font-size:.78rem; line-height:1.9; color:var(--ink-soft); margin-top:.7rem; }
+  .appendix .map b{ color:var(--accent); font-weight:600; }
+
+  /* ---- print ---- */
+  @page{ size:A4; margin:18mm 20mm; }
+  @media print{
+    :root{ --paper:#fff; }
+    body{ background:#fff; font-size:10.4pt; line-height:1.48; }
+    .wrap{ max-width:none; margin:0; padding:0; }
+    .anim > *{ opacity:1 !important; transform:none !important; animation:none !important; }
+    h1.title{ font-size:30pt; }
+    h2.head{ font-size:14pt; }
+    .subtitle{ font-size:12pt; }
+    .abstract{ font-size:10.4pt; }
+    .thesis, .open, .ref, ul.refs li, dl.plugins div{ break-inside:avoid; page-break-inside:avoid; }
+    section{ break-inside:auto; }
+    h2.head, .kicker{ break-after:avoid; }
+    a{ color:inherit; text-decoration:none; }
+    .no-print{ display:none !important; }
+  }
+</style>
+</head>
+<body>
+<main class="wrap anim">
+
+  <p class="eyebrow">Research observation · Non-exhaustive · Not a specification</p>
+  <h1 class="title">Accountable&nbsp;Agents</h1>
+  <p class="subtitle">Building agent systems as a double-entry provenance ledger</p>
+  <div class="meta">
+    <span>Working draft · v0.1</span>
+    <span>30 May 2026</span>
+    <span>A lens, not a circuit</span>
+  </div>
+
+  <hr class="hr">
+
+  <div class="abstract">
+    <p>This note proposes one way to build agent systems so that every output is <strong>accountable by construction</strong>: you can always answer “where did this come from, through what, and on whose authority?” without bolting logging on after the fact. The organizing idea is borrowed from accounting — a double-entry ledger, where nothing is recorded without being balanced against its source.</p>
+    <p>It is deliberately incomplete. It marks its open questions explicitly, and its central claim is that those open questions are not gaps to be closed once and for all — they are the <strong>extension points</strong>, the plugins, where a concrete system supplies its own choices. Read it as a sketch of the schematic, not the finished circuit.</p>
+  </div>
+
+  <section class="lead-in">
+    <p class="kicker">The task, kept small</p>
+    <h2 class="head">The simplest agent that is still architecturally complete</h2>
+    <p>Picture the smallest useful agent: it receives a request, gathers some facts, does some work — an algorithm, a model call, sometimes a human — checks the result, and commits an answer. We want it built so that (a) every piece of the answer is traceable to its origin; (b) the model’s <em>generated</em> contribution is visibly separated from <em>sourced</em> facts and <em>human</em> decisions; (c) the system can re-run, correct, and audit itself; and (d) a person can step in at exactly the points that matter. What follows is the smallest set of design commitments that gets you there — and a list of the places you will have to decide for yourself.</p>
+  </section>
+
+  <hr class="hr light">
+
+  <!-- PART I -->
+  <section>
+    <p class="kicker">Part I</p>
+    <h2 class="head">One append-only store, many projections</h2>
+
+    <div class="thesis"><p><span class="tid">T1</span><span class="claim">There is one source of truth, and it is an append-only log of entries.</span> Don’t hold the agent’s “state” as mutable objects you overwrite. Hold an immutable log of what happened — every fact ingested, every result produced, every decision taken. Everything else (the current state, any table or graph the code reads) is a view <em>computed</em> from the log. This is event sourcing: the log is primary, state is derived. The payoff is that history is not a feature you add — it <em>is</em> the system.</p></div>
+
+    <div class="thesis"><p><span class="tid">T2</span><span class="claim">The working “graph” is a projection, not a second database.</span> Agents like to think in a graph of entities and relations. Keep that graph as a materialized view over the log — a read model you can always rebuild. There is no consistency problem between “the trace” and “the data,” because they are the same thing read two ways: the log along time, the graph at an instant.</p></div>
+
+    <div class="thesis"><p><span class="tid">T3</span><span class="claim">Producers and consumers talk through the store by content, not by name.</span> A step that needs input asks for it by <em>what it is</em> — “claims of type X about entity E, confidence over 0.8” — not by <em>who made it</em> — “the output of <span style="font-family:var(--mono);font-size:.85em">parse_claims</span>.” This is the blackboard / tuple-space pattern: coordination by pattern-matching rather than addressing. It is what makes steps composable — add, remove, or reorder producers without touching consumers.</p></div>
+    <div class="open"><span class="otag">Open · plugin</span><p>The query/selector engine — how patterns are matched against the store — is yours to choose, and the attribute vocabulary it matches on is the one thing that cannot be left implicit. See the Plugin Surface.</p></div>
+  </section>
+
+  <!-- PART II -->
+  <section>
+    <p class="kicker">Part II</p>
+    <h2 class="head">The unit of work: a uniform four-phase node</h2>
+
+    <div class="thesis"><p><span class="tid">T4</span><span class="claim">Every step has the same shape, whatever it does.</span> A node has four phases: <b style="font-family:var(--mono);font-weight:600;font-size:.85em;color:var(--accent)">resolve</b> (collect its inputs from the store via selectors), <b style="font-family:var(--mono);font-weight:600;font-size:.85em;color:var(--accent)">act</b> (do the work), <b style="font-family:var(--mono);font-weight:600;font-size:.85em;color:var(--accent)">assess</b> (decide what happens next), <b style="font-family:var(--mono);font-weight:600;font-size:.85em;color:var(--accent)">post</b> (write results back as ledger entries). Uniform shape buys uniform tooling, uniform tracing, and a small mental model. (It is functional-core/imperative-shell: <span style="font-family:var(--mono);font-size:.85em">act</span> is the pure-ish core, <span style="font-family:var(--mono);font-size:.85em">resolve</span> and <span style="font-family:var(--mono);font-size:.85em">post</span> are the I/O shell.)</p></div>
+
+    <div class="thesis"><p><span class="tid">T5</span><span class="claim">The <span style="font-family:var(--mono);font-size:.88em">act</span> phase is executor-agnostic: code, model, or human, behind one contract.</span> Whether a step runs a deterministic function, calls an LLM, or routes to a person is an internal detail of <span style="font-family:var(--mono);font-size:.85em">act</span>. The orchestration does not change when you swap one for another. This is the single most useful property of the whole arrangement: start a capability as a human task, replace it with a model, later replace it with code — without rewiring anything around it.</p></div>
+
+    <div class="thesis"><p><span class="tid">T6</span><span class="claim">Cardinality and schema growth live in <span style="font-family:var(--mono);font-size:.88em">resolve</span> and <span style="font-family:var(--mono);font-size:.88em">post</span>, and they bite.</span> Content-addressed selection returns 0, 1, or N, so every selector needs a cardinality contract (expect-one / expect-many / at-least-one) and a policy when it is violated. And <span style="font-family:var(--mono);font-size:.85em">post</span> is not “fill in known fields” — interesting work <em>creates</em> structure that was not in the input schema. So <span style="font-family:var(--mono);font-size:.85em">post</span> must be allowed to open new structure, and opening it must itself be recorded. Treat schema growth as a logged event, never a silent side effect.</p></div>
+  </section>
+
+  <!-- PART III -->
+  <section>
+    <p class="kicker">Part III</p>
+    <h2 class="head">The ledger: double-entry provenance</h2>
+
+    <div class="thesis"><p><span class="tid">T7</span><span class="claim">Every write is a balanced entry: no result may be posted without crediting its sources.</span> This is the spine. Borrow double-entry bookkeeping: you cannot record that something <em>appeared</em> without recording what it <em>came from</em>. A result debited into the store must be balanced by credits to its inputs, to a model, or to a human. The system <em>refuses</em> an unbalanced write — enforced at <span style="font-family:var(--mono);font-size:.85em">post</span> time, not checked later in an audit.</p></div>
+
+    <div class="thesis"><p><span class="tid">T8</span><span class="claim">The conserved quantity is accountedness of origin — not information.</span> This is the one place people over-read the metaphor, so state it plainly: semantics is <em>not</em> conservative. A model call adds content; a consolidation step destroys it. So “information” is not what balances. What balances is <em>attribution</em>: every node must have accounted-for provenance. The integrity check is therefore an <strong>orphan check</strong> — the books balance iff no node exists without accounted in-edges.</p></div>
+
+    <div class="thesis"><p><span class="tid">T9</span><span class="claim">Tag every contribution by kind: SOURCED, DERIVED, GENERATED, DECIDED.</span> Sourced = from inputs or external data. Derived = transformed by a deterministic step. Generated = produced by a model beyond what the inputs entail. Decided = committed by a human. With these four account types you can read off any answer’s composition — how much was given by the model versus grounded in sources versus owned by a person. In a regulated or high-stakes setting that separation <em>is</em> the deliverable. And <strong>generated content is a liability</strong>: it is drawn against a future obligation to validate it, source it, or have a human own it.</p></div>
+
+    <div class="thesis"><p><span class="tid">T10</span><span class="claim">Corrections, merges, and failures are entries, never erasures.</span> You never mutate the log. To fix something, post a <em>reversing entry</em> (the accountant’s credit memo; in distributed systems, a compensating transaction — a saga). To combine overlapping results, post a <em>consolidation entry</em> that credits both and debits the merged result. When a step fails or a restart discards work, you reverse it — the record that it happened survives. Ingesting the original request is itself the <em>opening entry</em>: credited from “the outside world,” debited into the store. So even the first decomposition of the request is balanced and traced — there is no privileged, untraceable root.</p></div>
+  </section>
+
+  <!-- PART IV -->
+  <section>
+    <p class="kicker">Part IV</p>
+    <h2 class="head">The control plane: <span style="font-family:var(--display)">assess</span> returns verbs, not data</h2>
+
+    <div class="thesis"><p><span class="tid">T11</span><span class="claim">The <span style="font-family:var(--mono);font-size:.88em">assess</span> phase produces a control decision, not a result.</span> Separate the data plane (what flows) from the control plane (what governs flow). <span style="font-family:var(--mono);font-size:.85em">act</span> is data plane; <span style="font-family:var(--mono);font-size:.85em">assess</span> is control plane. Its output is one of a small set of verbs — PROCEED, RETRY-FROM-STAGE, ABORT, SKIP-TO-STAGE, ESCALATE-TO-HUMAN — resolved through an explicit table. This is where responsibility lives: not where work is done, but where it is decided whether the work may propagate.</p></div>
+
+    <div class="thesis"><p><span class="tid">T12</span><span class="claim">PROCEED is an explicit, logged action — not the absence of one.</span> The commonest verb is “fine, continue.” If continuing is merely what happens when nothing else fires, then the most frequent decision in your system is never recorded, and accountability evaporates exactly where most of the traffic flows. Make PROCEED an affirmative entry — the same reason aviation distinguishes an active decision to continue from a failure to stop.</p></div>
+
+    <div class="thesis"><p><span class="tid">T13</span><span class="claim">The verb table needs a fail-closed default, a progress measure, and a privileged-verb discipline.</span> Three safety properties. (a) Any control state not in the table defaults to halt-or-escalate, never proceed. (b) RETRY-FROM-STAGE creates a loop, so it must require a measurable reduction in some quantity each pass — unresolved conflicts, ungrounded liabilities — or it livelocks; a restart that reduces nothing is stagnation in the mask of iteration. (c) SKIP-TO-STAGE is the dangerous verb, because it <em>bypasses</em> the methodological stages — it must carry an explicit reason and a higher authority than a retry. Changing a threshold in this table is itself a governed, logged act.</p></div>
+  </section>
+
+  <!-- PART V -->
+  <section>
+    <p class="kicker">Part V</p>
+    <h2 class="head">Commitment and human presence</h2>
+
+    <div class="thesis"><p><span class="tid">T14</span><span class="claim">A commit point is where the system commits to an output; commit points have variable height.</span> Not every result needs a human. Cheap, reversible, routine commitments are decided locally by <span style="font-family:var(--mono);font-size:.85em">assess</span>. Expensive, irreversible, or novel commitments are handed up to a human locus. The height is per-commitment, not global.</p></div>
+
+    <div class="thesis"><p><span class="tid">T15</span><span class="claim">Human presence comes in three modes, and they are not interchangeable.</span> Synchronous (a person decides now), policy (a person authored the mechanical checks in advance), and post-hoc (a person reviews the trace later). These are <em>before / during / after</em> the decision — legislative, executive, judicial. Their risk profiles differ sharply: policy checks are blind to the novel; post-hoc review catches the novel only after the consequence has propagated. (This is the maker-checker / segregation-of-duties principle, and the logic behind named-accountability regimes.)</p></div>
+
+    <div class="thesis"><p><span class="tid">T16</span><span class="claim">The required mode is a function of reversibility × novelty.</span> Reversible and anticipated → policy or post-hoc is enough, and you get to scale. Irreversible and novel → you <em>cannot</em> delegate to mechanical checks or to later review; a person must be present during the decision. ESCALATE-TO-HUMAN is the mechanism that <em>promotes</em> a commitment to synchronous presence when novelty is detected at runtime.</p></div>
+    <div class="open"><span class="otag">Open · plugin · the hard one</span><p>Detecting “this is novel — outside what the checks were authorized for” is an out-of-distribution problem, and it is the most load-bearing component in the whole design. Without it, policy presence silently degrades into <em>no</em> presence exactly when novelty arrives.</p></div>
+
+    <div class="thesis"><p><span class="tid">T17</span><span class="claim">What a human sees is a projection — and at a decision point it must be full-disclosure.</span> A person never sees the raw store; they see a report scoped to their view-point, with drill-down to the underlying entries. But a report can hide the liabilities — show the polished answer, omit how much of it was GENERATED versus SOURCED. That is the semantic equivalent of off-balance-sheet liabilities. At a decision point the projection must surface the grounding composition, or “human presence” is a signature over hidden liabilities.</p></div>
+  </section>
+
+  <!-- PART VI -->
+  <section>
+    <p class="kicker">Part VI</p>
+    <h2 class="head">Sequencing: stages as discipline, not just schedule</h2>
+
+    <div class="thesis"><p><span class="tid">T18</span><span class="claim">Define an ordered set of stages; their order encodes method, not merely data flow.</span> Beyond the data-dependency DAG (B cannot run before A if B needs A’s output), impose a stage order that reflects how you want the work done — establish and verify before you connect, connect before you commit. A stage earns its place only where it forbids an ordering the data dependencies would otherwise permit <em>and the prohibition matters</em> (“don’t relate unverified material, because connecting errors propagates them”). If a stage order never constrains anything the dependency graph does not, it is decoration. Stages are a discipline layer.</p></div>
+
+    <div class="thesis"><p><span class="tid">T19</span><span class="claim">Data dependencies always win over stage order, and the pipeline must be able to loop.</span> When methodological order and causal order conflict, causal wins — you cannot consume what has not been produced. And a pure forward pipeline can only proceed; to revise, it needs a back-edge (the RETRY-FROM-STAGE verb) governed by the progress measure of T13. That back-edge, gated by a real evaluative pause rather than a reflex, is what separates a system that <em>iterates</em> from one that merely <em>proliferates</em>.</p></div>
+  </section>
+
+  <hr class="hr">
+
+  <!-- LIMITS -->
+  <section>
+    <p class="kicker">Where the metaphor strains</p>
+    <h2 class="head">Read this before you over-trust the ledger</h2>
+
+    <div class="thesis"><p><span class="tid">L1</span><span class="claim">You get integrity, not arithmetic.</span> The balance is <em>topological</em> (every node has accounted in-edges), not <em>numeric</em>. You cannot honestly say “30% of this output came from input A” — clean attribution in generative systems is the unsolved interpretability problem. Build the orphan check; do <em>not</em> build a layer that prints attribution percentages, because it would be fiction wearing accounting’s authority.</p></div>
+
+    <div class="thesis"><p><span class="tid">L2</span><span class="claim">Provenance is fixed; meaning drifts.</span> A result’s <em>origin</em> is fixed by its entry, but its <em>significance</em> is relational — it shifts as the graph grows around it. “Always traceable” is true of where a result came from; it is not true of what it currently means.</p></div>
+
+    <div class="thesis"><p><span class="tid">L3</span><span class="claim">Consolidation is a write-off, not a transfer.</span> A step that collapses many results into one <em>destroys detail on purpose</em>. Accounting has no “loss of information,” so model it as a write-off: a consolidation must record what it dropped and why, or the trace goes blind at the most consequential operation.</p></div>
+
+    <div class="thesis"><p><span class="tid">L4</span><span class="claim">Keep two ledgers, not one.</span> The semantic ledger (accountedness of meaning) and the resource ledger (compute, model cost, human-minutes) are both double-entry but in different currencies. Merging them is a category error; the budget that governs escalation lives in the second ledger.</p></div>
+  </section>
+
+  <hr class="hr">
+
+  <!-- PLUGIN SURFACE -->
+  <section>
+    <p class="kicker">The plugin surface</p>
+    <h2 class="head">The open questions are the extension points</h2>
+    <p>The following are deliberately <em>not</em> fixed here. Each is an interface a concrete system supplies. The claim of this note is that these are not loose ends but the <em>seams</em> — the places the architecture is designed to be specialized, and the places where most of the real engineering and most of the domain judgment actually live.</p>
+
+    <dl class="plugins">
+      <div><dt>Attribute ontology</dt><dd>The vocabulary <span style="font-family:var(--mono);font-size:.85em">resolve</span> / <span style="font-family:var(--mono);font-size:.85em">post</span> match on. Cannot be implicit: when producers and consumers drift in naming, selectors silently under-match. The one mandatory, policed contract.</dd></div>
+      <div><dt>Selector engine</dt><dd>How patterns are matched against the store, and how cardinality violations are handled.</dd></div>
+      <div><dt>Ingress decomposer</dt><dd>Turns a raw request into opening entries. Must itself be a logged node, not a privileged root.</dd></div>
+      <div><dt>Stage set &amp; order</dt><dd>Your domain’s discipline layer (T18) — and the prohibitions that make it more than decoration.</dd></div>
+      <div><dt>Assess → verb table</dt><dd>The verbs, the thresholds, the fail-closed default. Encodes the system’s risk appetite.</dd></div>
+      <div><dt>Merge / write-off policy</dt><dd>When overlapping results coexist versus combine; how conflict is resolved; what a consolidation records as dropped (L3).</dd></div>
+      <div><dt>Novelty detector</dt><dd>Drives ESCALATE; an out-of-distribution problem; the hardest component (T16).</dd></div>
+      <div><dt>Attribution model</dt><dd>How the SOURCED / DERIVED / GENERATED / DECIDED split is assigned — bounded by L1: topological, not numeric.</dd></div>
+      <div><dt>Authority model</dt><dd>Who may post which entry types; who may move a threshold; segregation of duties.</dd></div>
+      <div><dt>Presence routing</dt><dd>The reversibility × novelty → presence-mode function (T16).</dd></div>
+      <div><dt>Resource ledger</dt><dd>The second ledger; budgets and credit limits that force settlement or escalation (L4).</dd></div>
+      <div><dt>Projection specs</dt><dd>Per view-point reports, with the full-disclosure requirement at decision points (T17).</dd></div>
+    </dl>
+  </section>
+
+  <hr class="hr">
+
+  <!-- REFERENTS -->
+  <section>
+    <p class="kicker">Referents</p>
+    <h2 class="head">Prior art this leans on</h2>
+    <ul class="refs">
+      <li><span class="rname">Blackboard architecture</span> — Hayes-Roth; the HEARSAY-II speech-understanding system. Shared structured memory plus opportunistic knowledge sources; the hard part was always the controller.</li>
+      <li><span class="rname">Tuple spaces / Linda</span> — Gelernter &amp; Carriero, 1985. Coordination by pattern-matching, not by addressing.</li>
+      <li><span class="rname">Event sourcing &amp; CQRS</span> — Fowler; Greg Young. Append-only log as truth; state as projection.</li>
+      <li><span class="rname">Double-entry bookkeeping</span> — Pacioli, 1494. Balanced entries, conservation, an audit trail by construction.</li>
+      <li><span class="rname">Functional core, imperative shell</span> — Gary Bernhardt. Pure transformation, effects at the boundary.</li>
+      <li><span class="rname">Sagas / compensating transactions</span> — Garcia-Molina &amp; Salem, 1987. Reversal instead of rollback.</li>
+      <li><span class="rname">Segregation of duties / maker-checker</span> — accounting and security controls; authorization on actions.</li>
+      <li><span class="rname">DAG orchestration</span> — Airflow, Dagster, Temporal; LangGraph for agent control flow.</li>
+      <li><span class="rname">Out-of-distribution / novelty detection</span> — the runtime trigger for escalation.</li>
+      <li><span class="rname">Data provenance / lineage</span> — W3C PROV; the derivation-edge model.</li>
+      <li><span class="rname">Retrieval-augmented generation / grounding</span> — the SOURCED-versus-GENERATED line.</li>
+    </ul>
+  </section>
+
+  <hr class="hr">
+
+  <!-- CLOSING -->
+  <section class="closing">
+    <p class="kicker">Closing</p>
+    <h2 class="head">A narrow wager, stated plainly</h2>
+    <p>None of the parts here are new on their own; the observation is only that they compose. The wager is narrow and worth stating without inflation: <strong>if you make accountedness the conserved quantity and enforce it at write time, you get provenance, correction, and audit almost for free — and you make a system’s honesty about what it generated mechanical rather than aspirational.</strong></p>
+    <p>That is a step on one axis only. It does not make the underlying semantics easier; it makes the bookkeeping over that difficulty trustworthy. Everything genuinely hard — novelty detection, attribution, meaning under drift — has been named, not solved, and located where it belongs: in the plugins.</p>
+  </section>
+
+  <!-- APPENDIX -->
+  <div class="appendix">
+    <p class="kicker">Appendix · origin (optional)</p>
+    <p>The plain terms above generalize a more specific authored grammar. A compact mapping, for continuity:</p>
+    <p class="map">
+      store / log &nbsp;↔&nbsp; <b>indestructible trace</b><br>
+      balanced entry &nbsp;↔&nbsp; <b>double-entry over a chart of accounts</b><br>
+      generated-as-liability &nbsp;↔&nbsp; <b>informational overdraft / fold-debt</b><br>
+      consolidation &nbsp;↔&nbsp; <b>fold</b> &nbsp;·&nbsp; decomposition &nbsp;↔&nbsp; <b>unfold</b><br>
+      assess-verbs &nbsp;↔&nbsp; <b>govern / stop</b><br>
+      stages &nbsp;↔&nbsp; <b>Harmogics phases</b><br>
+      commit point &nbsp;↔&nbsp; <b>the committing fold / Responsibility</b>
+    </p>
+  </div>
+
+</main>
+</body>
+</html>
